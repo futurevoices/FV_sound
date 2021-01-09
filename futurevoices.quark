@@ -1,0 +1,10 @@
+(
+	\name: "futurevoices",
+	\path: "futurevoices",
+	\summary: "Future Voices installation codebase",
+	\author: "Alberto de Campo, Hannes Hoelzl, S4NTP",
+	\version: 0.1,
+	\organization: "S4NTP",
+	\since: "2020",
+	\dependencies: [ "JITLibExtensions", "adclib", "SafetyNet", "Bjorklund", "Vowel", "say", "HyperDisCo", "DayTimer", "ContextSnake" ]
+)

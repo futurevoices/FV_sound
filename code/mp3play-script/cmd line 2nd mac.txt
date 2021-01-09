@@ -1,0 +1,23 @@
+mplayer  *.wav -shuffle -loop 0 -noar
+
+mplayer { 111.wav 222.wav 333.wav 444.wav } -loop 0 -noar #OK!
+
+mplayer { 111.wav 222.wav 333.wav 444.wav } -loop 0 -shuffle -noar # no good
+
+play  *.mp3 -loop 0
+
+locate "*.wav" # not working
+locate "/Users/laVulega/Seafile/Future_Voices/soundlibs/test/*.wav" # not OK either
+
+find . -type f -name "*.wav"
+
+
+
+while true; do ls *.wav | shuf | while read fileName; do mplayer "$fileName" -noar ; done; sleep 0.1; done
+
+while true; do ls *.wav | while read fileName; do mplayer "$fileName" -noar ; done; sleep 0.1; done # iterates but does not play
+
+while true; do ls *.mp3 | while read fileName; do play "$fileName" ; done; sleep 0.1; done
+while true; do ls *.mp3 | while read fileName; do afplay "$fileName" ; done; sleep 0.1; done
+while true; do ls *.mp3 | while read fileName; do afplay "$fileName" ; done; sleep 0.1; done
+
