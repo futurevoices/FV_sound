@@ -30,6 +30,7 @@ q.readDictPath = "libs/a_readDict.scd".resolveRelative;
 //// adjust this for BRAZILPERC and hang soundlibs!
 q.soundlibsPath = q.futureDir +/+ "soundlibs/";
 q.soundlibsPath = "~/Seafile/Future_Voices/soundlibs/";
+q.soundlibsPath = "~/Seafile/future_soundz/soundlibs/";
 
 //***** edit this to taste ***********//
 
@@ -227,7 +228,7 @@ Task {
 	///////// do server setup here, before booting:
 	// s.options.device = "the special 2 computer device ...";
 	// give server lots of realtime Memory: 2 ** 21 is 2 GB, 2 ** 19 is 500MB
-	s.options.memSize = (2 ** 19).asInteger;
+	s.options.memSize = (2 ** 19).asInteger; // 500MB
 	s.options.numAudioBusChannels = 4096;
 	s.options.sampleRate = 44100;
 	s.options.numBuffers = 2048; // default is 1024
@@ -235,8 +236,13 @@ Task {
 	// no inputs
 	s.options.numInputBusChannels = 0;
 	s.options.numOutputBusChannels = 4;
-	if (ServerOptions.devices.any (_=="playaudio12")) {
-		s.options.numOutputBusChannels = 14; // playaudio12
+
+	q.usePlayAudio12 = ServerOptions.devices.any (_=="PlayAUDIO12");
+
+	// use PlayAUDIO12 if there, then with
+	if (q.usePlayAudio12) {
+		s.options.device = "PlayAUDIO12";
+		s.options.numOutputBusChannels = 14;
 	};
 
 	2.wait;
@@ -259,6 +265,11 @@ Task {
 		0.2.wait;
 
 		"*** FUVO - PREP DONE!".postln;
+
+		if (q.usePlayAudio12) {
+			// play sine sig on ch 13 for playAUdio:
+			Ndef(\zz_PASign, { SinOsc.ar }).play(12, vol: 0.1);
+		};
 
 		Tdef(\director_FV).play;
 	}
