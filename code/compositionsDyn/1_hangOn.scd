@@ -40,6 +40,8 @@ Tdef( 'fv_hangOn' , { |ev|
 			buf = dict.buf;
 			buf.path.basename.postcs;
 
+			MFdef(\sendInfo).value(dict.name, q.activeTdef.key);
+
 			if(buf.notNil){
 
 				(instrument: \simpsamp,

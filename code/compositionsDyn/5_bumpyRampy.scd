@@ -36,6 +36,8 @@ Tdef('fv_bumpy', { |ev|
 		q.readBufToDict(dict);
 		buf = dict.buf;
 
+		MFdef(\sendInfo).value(dict.name, q.activeTdef.key);
+
 		0.2.wait;
 		Ndef(\fv_blip).ar;
 		s.sync;

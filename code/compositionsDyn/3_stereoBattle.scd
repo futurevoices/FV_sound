@@ -25,6 +25,8 @@ Tdef( 'fv_stereoBattle' , { |ev|
 		q.readBufToDict(voiceDict);
 		sample1 = voiceDict.buf;
 
+		MFdef(\sendInfo).value(voiceDict.name, q.activeTdef.key);
+
 		voiceDict.name.cs.postln;
 
 		if (sample1.notNil) {

@@ -30,6 +30,8 @@ Tdef('fv_kont_1', { |ev|
 		var buf;
 		q.readBufToDict(dict);
 		buf = dict.buf;
+		MFdef(\sendInfo).value(dict.name, q.activeTdef.key);
+
 
 		"*** playing: %\n".postf(buf.path.basename);
 		// much longer, softer, longer ringing, higher trigger thresh

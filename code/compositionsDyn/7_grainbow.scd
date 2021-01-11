@@ -35,8 +35,8 @@ Tdef('fv_grainbow', { |ev|
 			var numvoices = exprand(3, 8).round;
 			var pitchvar = 0.1.linrand.round(0.001);
 			q.readBufToDict(dict);
-			dict.name;
 			buf = dict.buf;
+			MFdef(\sendInfo).value(dict.name, q.activeTdef.key);
 			"- % n: % pvar: %\n".postf(dict.name, numvoices, pitchvar);
 
 			thisNdef.fadeTime = 1;

@@ -97,11 +97,11 @@ Tdef(\fv_lang_clusters, { |ev|
 			"currently speaking % in % voices\n".postf(lang, sfdurs.size);
 			"total dur: % wait for end: %\n".postf(lastEndTime, waitForEnds);
 
-			"durs: %\n".postf(sfdurs);
-			"pauses: %\n".postf(pauses);
-			"cumulativePauses: %\n".postf(cumulPauses);
-			"endTimes: %\n".postf(endTimes);
-			"waitForEnds: %\n".postf(waitForEnds);
+			// "durs: %\n".postf(sfdurs);
+			// "pauses: %\n".postf(pauses);
+			// "cumulativePauses: %\n".postf(cumulPauses);
+			// "endTimes: %\n".postf(endTimes);
+			// "waitForEnds: %\n".postf(waitForEnds);
 
 			// new lang: change background sound
 			Ndef(\fv_forml).fadeTime = rrand(0, 2.0);
@@ -111,6 +111,8 @@ Tdef(\fv_lang_clusters, { |ev|
 
 			entriesPerLang.do {|entry, j|
 				var buf = q.readBufToDict(entry).buf;
+
+				MFdef(\sendInfo).value(entry.name, q.activeTdef.key);
 
 				(instrument: \simpsamp,
 					buf: buf,

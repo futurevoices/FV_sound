@@ -96,6 +96,8 @@ Tdef( 'fv_listo' , { |ev|
 			q.readBufToDict(dict);
 			buf = dict.buf;
 
+			MFdef(\sendInfo).value(dict.name, q.activeTdef.key);
+
 			if (buf.notNil) {
 
 				// plain playback on 1 ear
