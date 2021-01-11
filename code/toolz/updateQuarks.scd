@@ -1,6 +1,11 @@
-// all of them:
+// // did this already:
+// Quarks.install("https://github.com/adcxyz/futurevoices");
+
+Quarks.folder.openOS;
+
+// update all of them:
 Quarks.installed.do(_.update);
 
-// just fuvo quark
+// update just fuvo quark
 Quarks.installed.detect { |qrk| qrk.name == "futurevoices" }.update;
 

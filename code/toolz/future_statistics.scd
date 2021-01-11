@@ -3,6 +3,8 @@ q.mainDict.size
 
 q.mainDict.sum(_.dur) / q.mainDict.size; // avg 8.8 sec!
 
+q.mainDict.collect(_.dur).asArray.sort.plot
+
 //// 82 soundfiles sind stereo?? why???
 q.mainDict.select { |d| d.soundfile.numChannels > 1 }.size;
 
