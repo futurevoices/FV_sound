@@ -90,6 +90,7 @@ Tdef(\director_FV).set(\closeSecs, 150);
 
 Tdef(\director_FV, { |ev|
 
+	q.composRecents = [];
 
 	loop {
 		var cycleTimeSecs, cycleRemainSecs;
@@ -107,11 +108,21 @@ Tdef(\director_FV, { |ev|
 		// choose & play one of the compos files:
 		// new compositions get added automatically!
 		q.composChoices = q.composPath.pathMatch;
-		// remove last played path - no immediate repeat
-		// could keep several recent ones to avoid repeating them soon
-		q.composChoices = q.composChoices.removeAllSuchThat { |path| path != q.chosenFile };
+
+		// // remove last played path - no immediate repeat
+		// // could keep several recent ones to avoid repeating them soon
+		// q.composChoices = q.composChoices.removeAllSuchThat { |path| path != q.chosenFile };
+
+		///// remove last 4 played paths from choices:
+		q.composChoices = q.composChoices.reject { |path| q.composRecents.includesEqual(path) };
 		// choose one of them
 		q.chosenFile = q.composChoices.choose;
+
+		// and add new one to recents, max 4
+		q.composRecents = q.composRecents.addFirst(q.chosenFile).keep(4);
+
+
+
 		"\n\n*** starting composition %\n".postf(q.chosenFile.basename);
 		q.chosenDur = (exprand(120, 300)).round.asInteger;
 		"*** plays for % seconds \n\n".postf(q.chosenDur.round(1));

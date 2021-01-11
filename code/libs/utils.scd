@@ -77,3 +77,38 @@ MFdef('hang').add(\prep, {
 	};
 });
 
+
+/////// send to website:
+
+q.home = "~".standardizePath.basename;
+/// // turn it on for testing
+// q.home = "fuvo";
+/*
+// test sending:
+q.fvweb = NetAddr("gencomp.medienhaus.udk-berlin.de", 2222);
+q.fvweb.sendMsg(\fuvoStatus, \compos, \fv_bumpy, \entry, '2021-01-08-21-21-03_germany_de');
+q.fvweb.sendMsg(\fuvoStatus, \compos, \fv_hangOn, \entry, '2021-01-08-21-21-03_germany_de');
+
+MFdef(\sendInfo).value('2021-01-08-21-21-03_germany_de', \kont1);
+
+MFdef(\sendInfo).value(
+	q.mainDict.keys.choose.cs,
+	q.fvTdefs.keys.cs
+);
+// q.fvTdefs:
+Set[ 'fv_POLY', 'fv_bumpy', 'fv_lang_clusters', 'fv_kont_1', 'fv_stereoBattle', 'fv_listo', 'fv_hangOn', 'fv_grainbow' ]
+
+*/
+
+if ("fuvo" == q.home) {
+	q.fvweb = NetAddr("gencomp.medienhaus.udk-berlin.de", 4242);
+
+	MFdef(\sendInfo).add(\sendFVweb, { |entryKey, compos|
+		// "sending to futurevoices website:".postln;
+		compos = compos ? try { q.activeTdef.key } ? 'silent?';
+		try {
+			[\fuvoStatus, \compos, compos, \entry, entryKey].postcs;
+			q.fvweb.sendMsg(\fuvoStatus, \compos, compos, \entry, entryKey);
+		};
+	});
+};
