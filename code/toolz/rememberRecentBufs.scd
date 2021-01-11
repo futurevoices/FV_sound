@@ -29,7 +29,9 @@ q.newdict.buf.play;
 
 q.bufmem.usedKeys.size;
 
-/// use case 2: make a subset of full dict, and filter that:
+/// use case 2: make a subset of full dict, filter that:
+q.ourLangs.size
+
 (
 fork {
 	var shortz = q.mainDict.select { |dict| dict.dur < 7.5 };
