@@ -23,19 +23,9 @@ q.langCodes3;
 
 (
 q.mainDict.do { |dict|
-	var langshort = (dict.language.language_short ? "xxx").toLower.asSymbol;
+	var langshort = (dict.language_short ? "xxx").toLower.asSymbol;
 	if (q.langCodes2Set.includes(langshort).not) {
 		"*** % has unknown langshort %! ***\n".postf(dict.name, langshort);
 	}
 }; "";
 )
-
-*** sof_unsettled-sea_gr has unknown langshort gr! ***
-*** Chun_expression_02_nn has unknown langshort nan! ***
-*** Chun_expression_01_nn has unknown langshort nan! ***
-*** Audio 1_05 has unknown langshort xxx! ***
-*** Chun_expression_04_nn has unknown langshort nan! ***
-*** fv-ilijadjordjevic-hbs has unknown langshort bcms! ***
-*** Chun_expression_03_nn has unknown langshort nan! ***
-*** Andres_Ortega_FV1 has unknown langshort spa! ***
--> 

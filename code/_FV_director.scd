@@ -61,6 +61,7 @@ if (\PostLog.asClass.notNil) {
 "libs/_SynthLib.scd".loadRelative;
 "libs/dynamic_yamling.scd".loadRelative;
 "libs/utils.scd".loadRelative;
+"libs/langAnalysis.scd".loadRelative;
 
 /// q.updateEntries;
 

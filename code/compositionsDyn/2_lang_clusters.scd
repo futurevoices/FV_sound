@@ -54,22 +54,14 @@ Tdef(\fv_lang_clusters, { |ev|
 	////////// DATABASE FOLDER VERSION:
 	// filter out missing lang entries
 
-	q.langHisto = ();
-
-	q.ourLangs = q.mainDict.do {|sd|
-		var langKey;
-		try {
-			langKey = sd.language_short.asString.keep(2).toLower.asSymbol;
-			sd.put(\langKey, langKey);
-			q.langHisto[langKey] = q.langHisto[langKey] ? 0 + 1;
-		};
-	}.reject(_.isNil);
-
-	q.langHisto;
+	// declared in langAnalysis.scd:
+	q.lang.check;  // this updates
+	q.lang.numEntries; // how many each?
+	q.lang.byCount;    // sorted by numEntries
+	q.lang.names;      // just names sorted by numEntries
 
 	loop {
-		// our director knows when it's finished!
-		var langKeys = q.langHisto.keys(Array).scramble;
+		var langKeys = q.lang.names.scramble;
 
 		"*** lang keys: ***".postln;
 		langKeys.postcs;
