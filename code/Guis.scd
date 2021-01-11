@@ -3,13 +3,13 @@ Butz.style.font_(Butz.style.font.size_(18));
 Butz.add(\mini, { Butz.showButs(2); () });
 Butz.add(\maxi, { Butz.showButs(10) });
 Butz.add(\SHOWALL, {
-	[ 'TdefAll', 'myTdefs', 'mixer', 'MainFX', 'scope', 'meter' ].do { |name|
+	[ 'TdefAll', 'FutureVoices', 'mixer', 'MainFX', 'scope', 'meter' ].do { |name|
 		Butz.run(name)
 	}
 });
 
 Butz.add(\TdefAll, { WinBounds.showOrMake(\TdefAll) });
-Butz.add(\myTdefs, { WinBounds.showOrMake(\myTdefs) });
+Butz.add(\FutureVoices, { WinBounds.showOrMake(\FutureVoices) });
 Butz.add(\mixer,   { WinBounds.showOrMake(\mixer) });
 Butz.add(\MainFX,  { WinBounds.showOrMake(\MainFX) });
 Butz.add(\scope,   { WinBounds.showOrMake(\scope) });
@@ -45,9 +45,12 @@ WinBounds.addMake(\mixer, {
 	q.mix.parent;
 });
 
-WinBounds.addMake(\myTdefs, {
-	q.tdefwin = Window(\myTdefs).front.moveTo(300, Window.availableBounds.height - 100);
+WinBounds.addMake(\FutureVoices, {
+	q.tdefwin = Window(\FutureVoices).front.moveTo(300, Window.availableBounds.height - 100);
 	q.tdefwin.addFlowLayout;
+	q.statusView = StaticText(q.tdefwin, 400@30)
+	.string_(" ... ").align_(\center)
+	.font_(Font.default.copy.size_(20));
 	TdefGui(Tdef(\director_FV), 5, q.tdefwin, 380@120);
 	TdefGui(Tdef(\testAll), 2, q.tdefwin, 380@50);
 	q.autobut = Button(q.tdefwin, 90@30).states_([["Auto"], ["Manual"]]);
@@ -60,6 +63,8 @@ WinBounds.addMake(\myTdefs, {
 
 	q.tdefguiskip.stop;
 	q.tdefguiskip = SkipJack({
+		q.statusView.string = "% contributions in % languages"
+		.format(q.mainDict.size, q.lang.names.size);
 		q.fvkeys = try { q.fvTdefs.keys(Array).sort } ? [];
 		q.tdpopitems = q.tdpop.items.collect(_.key);
 		if (q.fvkeys != q.tdpopitems) {
@@ -83,7 +88,7 @@ WinBounds.saveString
 
 WinBounds.stored.putAll( (
 	'MainFX': Rect(694.0, 38.0, 524.0, 350.0),
-	'myTdefs': Rect(403.0, 406.0, 400.0, 400.0),
+	'FutureVoices': Rect(403.0, 406.0, 400.0, 400.0),
 	'NdefMixer_mixer': Rect(9.0, 37.0, 684.0, 345.0),
 	'scope': Rect(715.0, 411.0, 263.0, 250.0),
 
