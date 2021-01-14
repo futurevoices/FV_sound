@@ -45,6 +45,18 @@ Tdef( 'fv_hangOn' , { |ev|
 			if(buf.notNil){
 
 				(instrument: \simpsamp,
+					buf: hangbuf,
+					amp: 0.25, pan: -1.0.rand2,
+					sustain: hangbuf.duration,
+					rate: { 5.bilinrand *2 }.dup(rrand(3, 7) ).midiratio,
+					strum: rrand(0.03, 0.3),
+					out: ev.bus
+				).play;
+
+				(hangbuf.duration).wait;
+				(exprand(0.2, 4)).wait;
+
+				(instrument: \simpsamp,
 					buf: buf,
 					amp: 0.5, pan: 0,
 					sustain: buf.duration,
@@ -54,17 +66,6 @@ Tdef( 'fv_hangOn' , { |ev|
 			};
 
 			(instrument: \simpsamp,
-				buf: hangbuf,
-				amp: 0.25, pan: -1.0.rand2,
-				sustain: hangbuf.duration,
-				rate: { 5.bilinrand *2 }.dup(rrand(3, 7) ).midiratio,
-				strum: rrand(0.03, 0.3),
-				out: ev.bus
-			).play;
-
-			(hangbuf.duration).wait;
-			(exprand(0.2, 4)).wait;
-			(instrument: \simpsamp,
 				buf: percbuf,
 				amp: 0.25, pan: 0.5.rand2,
 				sustain: 2,
@@ -72,14 +73,13 @@ Tdef( 'fv_hangOn' , { |ev|
 				strum: rrand(0.03,0.1),
 				out: ev.bus
 			).play;
-			(2.0).wait;
+			1.0.wait;
 
 			/// add mystery/misery pause!
 			if (i.isPrime) {
 				3.wait;
-			};
-
+			}
 		}
 	}
-} );
+});
 );
