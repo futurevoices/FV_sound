@@ -121,7 +121,7 @@ SynthDef(\singSampRingerSinger, { |out, buf, amp=0.1, rate = 1, start, xpose1=2,
 	trig = ampTr > ampTrSlow;
 	// trig.poll;
 	freq = Latch.kr(freq, trig);
-	freq = freq.poll.fold(100, 2000); // higher ones hurt..
+	freq = freq.fold(100, 2000); // higher ones hurt..
 	sound = Limiter.ar(
 		Splay.ar(
 			Ringz.ar(trig*in.squared,
@@ -317,7 +317,7 @@ SynthDef(\singSampCavaForm, { |out, buf, amp=0.1, rate = 1, start,  wet = 0.50, 
 }).add;
 
 /*
-(instrument: \singSampCavaForm, buf: q.patienceDict.values[21.rand]z.buf, amp: 0.8).play;
+(instrument: \singSampCavaForm, buf: q.patienceDict.values[21.rand].buf, amp: 0.8).play;
 
 (instrument: \singSampCavaForm, buf: q.patienceDict.values[21.rand].buf, amp: 2.98, wet: 0.5, strDecay: 3, strSlope:0.9, rate: 1, thresh: 0.25 ).play;
 
