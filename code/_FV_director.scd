@@ -27,9 +27,13 @@ q.futureDir = thisProcess.nowExecutingPath.dirname.dirname;
 q.composPath = "compositionsDyn/*.scd".resolveRelative;
 q.readDictPath = "libs/a_readDict.scd".resolveRelative;
 
-//// adjust this for BRAZILPERC and hang soundlibs!
+//// adjust this for the non-contributions soundfiles in soundlibs
+/// BRAZILPERC, hang, jingle spoken sounds, etc !
 q.soundlibsPath = q.futureDir +/+ "soundlibs/";
+//// use the course folder:
 q.soundlibsPath = "~/Seafile/Future_Voices/soundlibs/";
+//// use the separate soundz Seafile folder
+//// we use for the stream
 q.soundlibsPath = "~/Seafile/future_soundz/soundlibs/";
 
 //***** edit this to taste ***********//
@@ -62,6 +66,7 @@ if (\PostLog.asClass.notNil) {
 "libs/dynamic_yamling.scd".loadRelative;
 "libs/utils.scd".loadRelative;
 "libs/langAnalysis.scd".loadRelative;
+"jinglers.scd".loadRelative;
 
 /// q.updateEntries;
 
@@ -92,6 +97,8 @@ Tdef(\director_FV).set(\closeSecs, 150);
 Tdef(\director_FV, { |ev|
 
 	q.composRecents = [];
+
+	Tdef(\jingleDir).embed;
 
 	loop {
 		var cycleTimeSecs, cycleRemainSecs;
@@ -180,6 +187,9 @@ Tdef(\director_FV, { |ev|
 			// "play a little hang/brazil flourish here?";
 
 			q.chosenFile = "nonono";
+
+			// play jingle at full hour!
+			Tdef(\jingleDir).embed;
 		};
 
 		// then go back to top, and stopAll
@@ -270,9 +280,10 @@ Task {
 			defer ({ (q.codeDir +/+ "Guis.scd").load }, 0.2);
 		};
 
-		////// preload two perc sample banks
+		////// preload sample banks
 		MFdef('brazil').value;
 		MFdef('hang').value;
+		MFdef('jinglers').value;
 
 		0.2.wait;
 
