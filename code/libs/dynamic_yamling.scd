@@ -48,8 +48,11 @@ q.updateEntries = {
 					q.numerifyVals(dict);
 
 					// dict.keys.postcs;
-
-					q.mainDict.put(nameKey, dict);
+					// only load approved dicts!
+					// this will load newly approved yamls when approved
+					if (dict.approved == "true") {
+						q.mainDict.put(nameKey, dict);
+					};
 					// "q.mainDict has % entries.\n".postf(q.mainDict.size);
 				} {
 					"*** no soundfile for % !!\n".postf(nameKey.cs);
