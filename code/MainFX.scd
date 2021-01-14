@@ -14,7 +14,7 @@ ProxyChain.add3(\eq, \filter -> { |in, locutfreq = 80, midGain = 4, airGain = 6|
 )
 );
 
-ProxyChain.add3(\reverb, \filterIn -> { |in, revTime = 3, animRate = 0.1, animDepth = 0.03|
+ProxyChain.add3(\reverb, \filterIn -> { |in, revTime = 2, animRate = 0.1, animDepth = 0.3|
 
 	AdCVerb2.ar(in.sum * 0.2,
 		revTime.lag(0.5),
@@ -42,11 +42,11 @@ ProxyChain.add3(\reverb, \filterIn -> { |in, revTime = 3, animRate = 0.1, animDe
 );
 
 ProxyChain.add3(
-	\ampFin, \filter -> { |in, drive=1, ampLimit=1|
-		Limiter.ar(in * drive, ampLimit);
+	\ampFin, \filter -> { |in, drive=1, ampLimit=0.96|
+		Limiter.ar(in * drive, ampLimit, 0.03).clip2(0.9999);
 	},
 	1,
-	( drive: [1, 10, \amp], ampLimit: [0.5, 1] )
+	( drive: [0.1, 10, \exp], ampLimit: [0.5, 1] )
 );
 
 /*
@@ -54,6 +54,6 @@ MainFX(s).clear;
 */
 MainFX(s, 2, [\eq, \reverb, \ampFin]);
 
-MainFX(s).add(\eq, 1).add(\ampFin, 1).add(\reverb, 0.2);
+MainFX(s).add(\eq, 1).add(\ampFin, 1).add(\reverb, 0.08);
 
 // MainFXGui(MainFX(s));
