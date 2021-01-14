@@ -37,7 +37,7 @@ Tdef(\fv_converse, {
 				(instrument: \simpsamp, buf: buf,
 					amp: 0.3, pan: [-1, 1].wrapAt(i)
 				).play;
-				0.1.wait;P
+				0.1.wait;
 			}
 		};
 
