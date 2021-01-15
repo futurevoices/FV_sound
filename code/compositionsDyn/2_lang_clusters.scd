@@ -33,6 +33,7 @@ Tdef(\fv_lang_clusters, { |ev|
 	var mykey = 'fv_lang_clusters';
 	var thisTdef = Tdef(mykey);
 	var thisNdef = q.tdefPrepNdef(thisTdef);
+	var langKeys;
 
 	"\n*** % starts ***\n\n".postf(thisTdef);
 	// wait a little ...
@@ -61,7 +62,7 @@ Tdef(\fv_lang_clusters, { |ev|
 	q.lang.names;      // just names sorted by numEntries
 
 	loop {
-		var langKeys = q.lang.names.scramble;
+		langKeys = q.lang.names.scramble;
 
 		"*** lang keys: ***".postln;
 		langKeys.postcs;
