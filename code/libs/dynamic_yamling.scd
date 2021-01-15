@@ -59,7 +59,7 @@ q.updateEntries = {
 				};
 			} { |error|
 				// error.dump;
-				"*** yaml read failed for % !!\n".postf(nameKey.cs);
+				"*** yaml or soundfile read failed for % !!\n".postf(nameKey.cs);
 			}
 		}
 	};

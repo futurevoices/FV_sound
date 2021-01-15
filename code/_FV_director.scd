@@ -1,6 +1,7 @@
 // ==========================================================
 // ==========================================================
-// Director is a Tdef that loads one composition after another from individual files and takes care of cleanups
+// Director is a Tdef that loads one composition after another
+// from individual files and takes care of cleanups
 
 /*
 // idea:
@@ -106,7 +107,7 @@ Tdef(\director_FV, { |ev|
 		var date, now, isClose, isAtZero;
 
 		// check for new entries in folder:
-		q.updateEntries;
+		defer { q.updateEntries };
 
 		// stop all previous tdefs & ndefs:
 		Tdef(\stopAll).stop.play(quant: 0);
