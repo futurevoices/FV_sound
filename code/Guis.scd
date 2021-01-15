@@ -30,6 +30,14 @@ Butz.add(\closeAll, {
 	}, 0.1);
 });
 
+Butz.add(\updateCode, {
+	defer { Quark("futurevoices").update }
+});
+
+Butz.add(\updateQuarks, {
+	defer { Quarks.installed.do(_.update) }
+});
+
 Task {
 	0.1.wait;
 	Butz.run(\closeAll);
