@@ -1,7 +1,7 @@
-Butz.style.font_(Butz.style.font.size_(18));
+Butz.style.font_(Butz.style.font.size_(16));
 
-Butz.add(\mini, { Butz.showButs(2); () });
-Butz.add(\maxi, { Butz.showButs(10) });
+Butz.add(\mini, { Butz.showButs(2); });
+Butz.add(\maxi, { Butz.showButs });
 Butz.add(\SHOWALL, {
 	[ 'TdefAll', 'FutureVoices', 'mixer', 'MainFX', 'scope', 'meter' ].do { |name|
 		Butz.run(name)
@@ -37,6 +37,17 @@ Butz.add(\updateCode, {
 Butz.add(\updateQuarks, {
 	defer { Quarks.installed.do(_.update) }
 });
+
+Butz.add(\RESTART, {
+	fork ({
+		Window.closeAll;
+		0.2.wait;
+		s.quit;
+		0.5.wait;
+		thisProcess.recompile;
+	}, AppClock);
+});
+
 
 Task {
 	0.1.wait;
