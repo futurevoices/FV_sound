@@ -53,7 +53,7 @@ Task {
 	0.1.wait;
 	Butz.run(\closeAll);
 	0.1.wait;
-	Butz.run(\SHOWALL);
+	Butz.run(\meter);
 }.play(AppClock);
 
 WinBounds.addMake(\mixer, {
@@ -108,11 +108,11 @@ WinBounds.saveString
 WinBounds.stored.putAll( (
 	'MainFX': Rect(694.0, 38.0, 524.0, 350.0),
 	'FutureVoices': Rect(403.0, 406.0, 400.0, 400.0),
-	'NdefMixer_mixer': Rect(9.0, 37.0, 684.0, 345.0),
-	'scope': Rect(715.0, 411.0, 263.0, 250.0),
+	'NdefMixer_mixer': Rect(100, 37.0, 684.0, 345.0),
+	'scope': Rect(5.0, 100, 263.0, 250.0),
 
 	'Butz': Rect(5.0, 545.0, 117.0, 460.0),
-	'meter': Rect(979.0, 430.0, 134.0, 230.0),
+	'meter': Rect(5.0, 300, 134.0, 230.0),
 	'TdefAll': Rect(126.0, 408.0, 274.0, 354.0)
 ) );
 
