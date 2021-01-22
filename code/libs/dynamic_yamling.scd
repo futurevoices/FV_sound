@@ -10,8 +10,6 @@
 */
 
 q = q ? ();
-q.yamlSearchPath = q.yamlSearchPath ? "~/Seafile/Future_Voices/upload/contributions/*.yaml";
-
 
 // this has all entries as dicts
 q.mainDict = q.mainDict ? ();

@@ -28,23 +28,12 @@ q.futureDir = thisProcess.nowExecutingPath.dirname.dirname;
 q.composPath = "compositionsDyn/*.scd".resolveRelative;
 q.readDictPath = "libs/a_readDict.scd".resolveRelative;
 
-//// adjust this for the non-contributions soundfiles in soundlibs
-/// BRAZILPERC, hang, jingle spoken sounds, etc !
-q.soundlibsPath = q.futureDir +/+ "soundlibs/";
-//// use the course folder:
-q.soundlibsPath = "~/Seafile/Future_Voices/soundlibs/";
-//// use the separate soundz Seafile folder
-//// we use for the stream
-q.soundlibsPath = "~/Seafile/future_soundz/soundlibs/";
 
-//***** edit this to taste ***********//
-
-// define path for database folder with soundfiles and yaml files:
-/////// this is the Future_Voices course folder version - OBSOLETE
-/////// q.yamlSearchPath = "~/Seafile/Future_Voices/upload/contributions/*.yaml".standardizePath;
-
-/////// THIS IS THE ONE for the one-year stream installation:
+/////// THESE ARE THE ONES for the stream installation:
+//// contributions folder in its own seafile
 q.yamlSearchPath = "~/Seafile/future_mirror/*.yaml".standardizePath;
+//// soundlibz folder in its own seafile
+q.soundlibsPath = "~/Seafile/future_soundz/soundlibs/";
 
 /* // get PostLog:
 Quarks.install("https://github.com/adcxyz/postlog");
