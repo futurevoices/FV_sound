@@ -52,11 +52,12 @@ q.updateEntries = {
 					// this will load newly approved yamls when approved
 					if (dict.approved == "true") {
 						q.mainDict.put(nameKey, dict);
-					} { 
-                        // if not approved, discards the soundfile object otherwise it won't be freed in memory
-                        if (soundfile.notNil) {
-                            soundfile.close;
-                        };
+					} {
+						// if not approved, discards the soundfile object otherwise it won't be freed in memory
+						if (soundfile.notNil) {
+							soundfile.close;
+						};
+					};
 					// "q.mainDict has % entries.\n".postf(q.mainDict.size);
 				} {
 					"*** no soundfile for % !!\n".postf(nameKey.cs);
@@ -64,10 +65,10 @@ q.updateEntries = {
 			} { |error|
 				// error.dump;
 				"*** yaml or soundfile read failed for % !!\n".postf(nameKey.cs);
-                // just to guarantee, frees the soundfile
-                if (soundfile.notNil) {
-                    soundfile.close;
-                };
+				// just to guarantee, frees the soundfile
+				if (soundfile.notNil) {
+					soundfile.close;
+				};
 			}
 		}
 	};
