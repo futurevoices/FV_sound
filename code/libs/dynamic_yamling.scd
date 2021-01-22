@@ -40,6 +40,9 @@ q.updateEntries = {
 						dur: soundfile.duration,
 						numChannels: soundfile.numChannels
 					);
+
+					soundfile.close;
+
 					// "transfer more yaml info...".postln;
 					q.dictToEvent(yamldict, dict );
 					q.emptyStringsToNils(dict);
