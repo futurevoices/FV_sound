@@ -38,6 +38,8 @@ Butz.add(\updateQuarks, {
 	defer { Quarks.installed.do(_.update) }
 });
 
+Butz.add(\openCodeDir, { q.codeDir.openOS });
+
 Butz.add(\RESTART, {
 	fork ({
 		Window.closeAll;
