@@ -187,47 +187,7 @@ Tdef(\director_FV, { |ev|
 });
 );
 
-(
-Tdef(\testAll, { |ev|
-
-	// make sure main dict is loaded / reloaded as needed
-	q.readDictPath.load;
-	s.sync;
-
-	q.composChoices = q.composPath.pathMatch;
-
-	q.composChoices.do { |compos|
-		var activeTdef;
-		q.chosenFile = compos;
-
-		Tdef(\stopAll).stop.play;
-
-		2.wait;
-
-		"\n\n*** starting composition %\n".postf(q.chosenFile.basename);
-		q.chosenDur = 15;
-		"*** plays for % seconds \n\n".postf(q.chosenDur.round(1));
-
-		activeTdef = q.chosenFile.load; // load and play!
-		activeTdef.postln.set(\randSeed, 10000.rand);
-
-		Tdef(\testAll).addSpec(\remainTime, [0, q.chosenDur]);
-		ev.remainTime = q.chosenDur;
-
-		while { ev.remainTime >= 0 } {
-			ev.remainTime = ev.remainTime - 1;
-			(1/ev.speedup).wait;
-		};
-
-		"\n\n*** ending composition %\n\n".postf(q.chosenFile.basename)
-
-		// then go back to top, and stopAll
-	};
-
-	Tdef(\stopAll).stop.play;
-	"*** Tdef('testAll') DONE!".postln;
-});
-);
+"testAll_tdef.scd".loadRelative;
 
 // for proxychain and MasterFX
 1000.do { |i| Spec.add(("wet"++i).asSymbol, \unipolar) };
