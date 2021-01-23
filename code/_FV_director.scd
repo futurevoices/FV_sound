@@ -1,21 +1,19 @@
-// ==========================================================
-// ==========================================================
-// Director is a Tdef that loads one composition after another
-// from individual files and takes care of cleanups
+/**********
 
-/*
-// idea:
-a single composition is loaded by loading one code file from the corresponding subdir.;
-it is ended/cleaned up by the Tdef(\stopAll)
+- This file loads the full setup for the FutureVoices installation,
+- and starts the piece immediately.
 
-conventions:
-- all compositions have Tdef and Ndef / Pdef names starting with 'fv' !
-- .play function is supplied inside the composition. So it will also run if u JUST execute their file.
+*** Structure:
+- Tdef director_FV finds all available episode compositions in subdir compositionsDyn.
+- loads one composition at a time, plays it for a while, then the next.
 
-// ToDo:
-- Ndefs end slowly in 5 secs; if SAME composition is chosen again, it will not restart in time!! (not all compos use Ndefs)
-- make sure that starting any Tdef(\jmp...) plays everything relating to that composition.
-*/
+- each single composition is loaded by loading one code file from subdir compositionsDyn;
+- it is ended/cleaned up by the Tdef(\stopAll)
+- all compositions have Tdef, Ndef, Pdef names starting with 'fv' !
+- loading compos file returns a Tdef(<compname> which runs everything else.
+- file autostarts tdef with some delay.
+
+****/
 
 // set relative filepaths once at compile time
 q=q?();
@@ -29,19 +27,20 @@ q.composPath = "compositionsDyn/*.scd".resolveRelative;
 q.readDictPath = "libs/a_readDict.scd".resolveRelative;
 
 
-/////// THESE ARE THE ONES for the stream installation:
-//// contributions folder in its own seafile
+/////// THESE ARE THE FOLDERS for the stream installation:
+//// contributions folder in its own auto-synced seafile folder
 q.yamlSearchPath = "~/Seafile/future_mirror/*.yaml".standardizePath;
-//// soundlibz folder in its own seafile
+//// soundlibz folder in its own auto-synced seafile folder
 q.soundlibsPath = "~/Seafile/future_soundz/soundlibs/";
 
-/* // get PostLog:
-Quarks.install("https://github.com/adcxyz/postlog");
-*/
+// get PostLog:
 if (\PostLog.asClass.notNil) {
 	\PostLog.asClass.start;
+} {
+	"*** installing postlog - please recompile.".postln;
+	Quarks.fetchDirectory;
+	Quarks.install("postlog");
 };
-
 
 // ==========================================================
 // ==========================================================
@@ -76,6 +75,8 @@ Task {
 	// give server lots of realtime Memory: 2 ** 21 is 2 GB, 2 ** 19 is 500MB
 	s.options.memSize = (2 ** 19).asInteger; // 500MB
 	s.options.numAudioBusChannels = 4096;
+	// priority: stability of stream more important thatn low latency
+	s.options.hardwareBufferSize = 4096;
 	s.options.sampleRate = 44100;
 	s.options.numBuffers = 2048; // default is 1024
 
@@ -85,7 +86,9 @@ Task {
 
 	q.usePlayAudio12 = ServerOptions.devices.any (_=="PlayAUDIO12");
 
-	// use PlayAUDIO12 if there, then with
+	// DLF radio uses PlayAUDIO12 dual-computer audio interface
+	// which can do failover - if that is present, we need 14 chans
+	/// to send control/alive failover audio signal
 	if (q.usePlayAudio12) {
 		s.options.device = "PlayAUDIO12";
 		s.options.numOutputBusChannels = 14;
