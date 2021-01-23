@@ -58,6 +58,8 @@ if (\PostLog.asClass.notNil) {
 "libs/langAnalysis.scd".loadRelative;
 "jinglers.scd".loadRelative;
 
+"dailyRecompile.scd".loadRelative;
+
 // load director and testAll Tdefs:
 "director_FV_tdef.scd".loadRelative;
 "testAll_tdef.scd".loadRelative;
