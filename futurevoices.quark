@@ -6,5 +6,5 @@
 	\version: 0.1,
 	\organization: "S4NTP",
 	\since: "2020",
-	\dependencies: [ "JITLibExtensions", "adclib", "SafetyNet", "Bjorklund", "Vowel", "say", "HyperDisCo", "DayTimer", "ContextSnake" ]
+	\dependencies: [ "JITLibExtensions", "adclib", "SafetyNet", "HyperDisCo", "DayTimer", "postlog", "Bjorklund", "Vowel", "ContextSnake" ]
 )
