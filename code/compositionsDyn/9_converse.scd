@@ -35,7 +35,8 @@ Tdef(\fv_converse, {
 		);
 
 		allshortz.curdle(0.15).do { |myshorts, j|
-			myshorts.size.postln;
+			"shortz group % - % files:\n".postf(j, myshorts.size);
+			// myshorts.do { |entry| entry.literal_text.keep(80).postcs };
 
 			fork {
 				10.do { |i|
@@ -59,6 +60,8 @@ Tdef(\fv_converse, {
 
 			rrand(1, 3).do { |i|
 				myshorts.scramble.do { |dict, j|
+					(dict.literal_text ?? dict.name.asString).keep(60).postcs;
+
 					(instrument: \simpsamp, buf: dict.buf,
 						amp: 0.3, pan: [-0.8, 0.8].wrapAt(j)
 					).play;
