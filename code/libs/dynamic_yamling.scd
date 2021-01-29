@@ -52,6 +52,15 @@ q.updateEntries = {
 						q.emptyStringsToNils(dict);
 						q.numerifyVals(dict);
 
+						// fix expected missing entries:
+						[ 'literal_text', 'literal_text_english',
+							'dialect', 'speaker_native_language' ].do { |key|
+							dict[key] ?? { dict[key] = "?" };
+						};
+						[ \keywords, \tags].do { |key|
+							dict[key] ?? { dict[key] = [] };
+						};
+
 						// dict.keys.postcs;
 						// only load approved dicts!
 						// this will load newly approved yamls when approved
