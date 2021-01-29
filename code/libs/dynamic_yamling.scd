@@ -27,36 +27,41 @@ q.updateEntries = {
 			// [i, path.basename ].postcs;
 			try {
 				yamldict = path.parseYAMLFile;
-				soundfile = SoundFile.find(path.splitext[0] ++ ".*").flat[0];
 
-				if (soundfile.notNil) {
-					dict = (
-						name: nameKey,
-						filename: nameKey, // why twice?
-						yamlPath: path,
-						//// soundfile info:
-						soundfilePath: soundfile.path,
-						soundfile: soundfile,
-						dur: soundfile.duration,
-						numChannels: soundfile.numChannels
-					);
+				// only look at approved ones for now
+				// does not yet remove newly disapproved ones
 
-					soundfile.close;
+				if (yamldict["approved"] == "true") {
+					soundfile = SoundFile((path.splitext[0] ++ ".wav")).info;
+					if (soundfile.notNil) {
+						dict = (
+							name: nameKey,
+							filename: nameKey, // why twice?
+							yamlPath: path,
+							//// soundfile info:
+							soundfilePath: soundfile.path,
+							soundfile: soundfile,
+							dur: soundfile.duration,
+							numChannels: soundfile.numChannels
+						);
 
-					// "transfer more yaml info...".postln;
-					q.dictToEvent(yamldict, dict );
-					q.emptyStringsToNils(dict);
-					q.numerifyVals(dict);
+						// "transfer more yaml info...".postln;
+						q.dictToEvent(yamldict, dict );
+						// really keep empty strings for e.g. literal_text?
+						// can fail in compositions that need full data
+						q.emptyStringsToNils(dict);
+						q.numerifyVals(dict);
 
-					// dict.keys.postcs;
-					// only load approved dicts!
-					// this will load newly approved yamls when approved
-					if (dict.approved == "true") {
+						// dict.keys.postcs;
+						// only load approved dicts!
+						// this will load newly approved yamls when approved
 						q.mainDict.put(nameKey, dict);
+					} {
+						"*** no soundfile for % !!\n".postf(nameKey.cs);
 					};
 					// "q.mainDict has % entries.\n".postf(q.mainDict.size);
 				} {
-					"*** no soundfile for % !!\n".postf(nameKey.cs);
+						"not approved: %.\n".postf(nameKey.cs);
 				};
 			} { |error|
 				// error.dump;
@@ -78,8 +83,6 @@ q.updateEntries = {
 q.mainDict.clear;
 q.updateEntries; "";
 */
-
-q.updateEntries; "";
 );
 
 ////// make pool of buffers to use
@@ -124,14 +127,12 @@ q.readBufToDict = { |q, entrydict|
 /*
 fork {
 var edict = q.mainDict.choose;
-bench {
-q.readBufToDict(edict);
-};
+bench { q.readBufToDict(edict); };
 edict.buf.postln.play;
 };
 */
 
-////////////////////// some load tests
+////////////////////// some  tests
 /*
 bench {
 "~/Seafile/Future_Voices/upload/contributions/""*.yaml".pathMatch.do { |path|
