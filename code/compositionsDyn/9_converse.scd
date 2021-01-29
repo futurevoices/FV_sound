@@ -15,9 +15,19 @@ q.mood .density = 2.62;
 (instrument: \glisson, sustain: 0.1, freq: 2000, freq2: 3000).play
 */
 
-Tdef(\fv_converse, {
-
+Tdef(\fv_converse, { |ev|
 	var timeRange, allshortz, myshorts, percs;
+
+	var mykey = 'fv_converse';
+	var thisTdef = Tdef(mykey);
+	var thisNdef = q.tdefPrepNdef(thisTdef);
+	"\n*** % starts ***\n\n".postf(thisTdef);
+	0.1.wait;
+	// so seed set from outside can be used when Tdef runs:
+	q.tdefSeed(thisTdef);
+
+	0.2.wait;
+	thisNdef.send.play(fadeTime: 0.1);
 
 	loop {
 
@@ -43,39 +53,49 @@ Tdef(\fv_converse, {
 					/// whistle
 					(instrument: \glisson, sustain: exprand(0.02, 0.2),
 						freq: exprand(400, 4000), freq2: exprand(400, 4000),
-						pan: 0.8.rand2
+						pan: 1.0.rand2,
+						out: ev.bus
 					).play;
 					0.05.wait;
 				};
 				percs.scramble.do { |buf, i|
 					(instrument: \simpsamp, buf: buf,
-						amp: 0.3, pan: [-1, 1].wrapAt(i)
+						amp: 0.3,
+						pan: [-0.1, 0.1].wrapAt(i) * i,
+						out: ev.bus
 					).play;
 					0.1.wait;
 				}
 			};
 
 			myshorts.do { |dict| q.readBufToDict(dict) };
-			0.2.wait;
+			0.5.wait;
 
-			rrand(1, 3).do { |i|
+			rrand(1, 2).do { |i|
+				("rep:" + i).postln;
+
 				myshorts.scramble.do { |dict, j|
 					(dict.literal_text ?? dict.name.asString).keep(60).postcs;
 
 					(instrument: \simpsamp, buf: dict.buf,
-						amp: 0.3, pan: [-0.8, 0.8].wrapAt(j)
+						amp: 0.3, pan: [-0.9, 0.9].wrapAt(j),
+						out: ev.bus
 					).play;
 
-					(dict.buf.duration / (q.mood.density ? 1.25)).wait;
+					dict.buf.duration / (q.mood.density ? 1.25).wait;
 
 					/// whistle
 					(instrument: \glisson, sustain: exprand(0.02, 0.2),
-						freq: exprand(400, 4000), freq2: exprand(400, 4000)
+						freq: exprand(400, 4000), freq2: exprand(400, 4000),
+						pan: 1.0.rand2,
+						out: ev.bus
 					).play;
+
 					// perc
 					(instrument: \simpsamp, buf: percs[j],
 						lag: 0.3,
-						amp: 0.3, pan: [-0.8, 0.8].wrapAt(j)
+						amp: 0.3, pan: [-0.1, 0.1].wrapAt(i) * i,
+						out: ev.bus
 					).play;
 				}
 			};
