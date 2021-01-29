@@ -31,7 +31,7 @@ Butz.add(\closeAll, {
 });
 
 Butz.add(\updateCode, {
-	defer { Quark("futurevoices").update }
+	defer { Quarks.at("futurevoices").update }
 });
 
 Butz.add(\updateQuarks, {
@@ -39,6 +39,9 @@ Butz.add(\updateQuarks, {
 });
 
 Butz.add(\openCodeDir, { q.codeDir.openOS });
+
+Butz.add(\chooseStartup, { StartupFile.dialog });
+
 
 Butz.add(\RESTART, {
 	fork ({
