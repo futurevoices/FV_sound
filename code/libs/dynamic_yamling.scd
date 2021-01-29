@@ -70,7 +70,7 @@ q.updateEntries = {
 					};
 					// "q.mainDict has % entries.\n".postf(q.mainDict.size);
 				} {
-						"not approved: %.\n".postf(nameKey.cs);
+						// "not approved: %.\n".postf(nameKey.cs);
 				};
 			} { |error|
 				// error.dump;
