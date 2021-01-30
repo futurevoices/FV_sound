@@ -18,7 +18,21 @@ Butz.add(\meter,   { WinBounds.showOrMake(\meter) });
 WinBounds.addMake(\TdefAll, { TdefAllGui.new(16).parent.name_(\TdefAll) });
 WinBounds.addMake(\scope, { s.scope.window.name_(\scope) });
 WinBounds.addMake(\meter, { s.meter.window.name_(\meter) });
-WinBounds.addMake(\MainFX, { MainFXGui(MainFX(s)).parent.name_(\MainFX) });
+
+WinBounds.addMake(\MainFX, {
+	var paramgui;
+	q.mfgui = MainFXGui(MainFX(s));
+	q.mfgui.parent.name_(\MainFX);
+	// update bloody param specs by hand:
+	paramgui = q.mfgui.editGui.paramGui;
+	MainFX(s).proxyChain.slotNames.do { |key|
+		ProxyChain.atSrcDict(key).specs.keysValuesDo { |key, spec|
+			paramgui.specs.put(key, spec);
+		}
+	};
+	paramgui.specs.postln;
+	q.mfgui.parent;
+});
 
 Butz.add(\closeAll, {
 	Window.closeAll;
