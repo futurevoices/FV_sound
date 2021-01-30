@@ -43,9 +43,7 @@ Tdef(\fv_converse, { |ev|
 			dict.dur.inclusivelyBetween(*timeRange) });
 
 		("raw allshorts: " + allshortz.size).postln;
-
 		allshortz = q.bufmem.filterDict(allshortz);
-
 		("filtered shorts: " + allshortz.size).postln;
 
 		percs = 5.collect { [ q.hang.choose, q.brazil.choose ] }.flat;
@@ -59,7 +57,7 @@ Tdef(\fv_converse, { |ev|
 		"groupsizes: ".post;
 		shortgroups.collect(_.size).postln;
 		shortgroups.do { |myshorts, j|
-			"shortz group % - % files:\n".postf(j, myshorts.size);
+			"shortz group % - % files\n".postf(j, myshorts.size);
 			// myshorts.do { |entry| entry.literal_text.keep(80).postcs };
 
 			fork {
@@ -87,14 +85,12 @@ Tdef(\fv_converse, { |ev|
 				q.bufmem.addKey(dict.name);
 			};
 
-			q.bufmem.usedKeys.postln;
-
 			0.5.wait;
 
 			rrand(1, 2).do { |i|
 				// reverse repeats? - not working yet
 				var rate = [1, -1][i];
-				("rep:" + i).postln;
+				("converse rep:" + i).postln;
 
 				myshorts.scramble.do { |dict, j|
 					(dict.literal_text ?? dict.name.asString).keep(60).postcs;

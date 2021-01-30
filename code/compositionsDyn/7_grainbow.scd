@@ -16,7 +16,7 @@ Tdef('fv_grainbow', { |ev|
 	var thisNdef = q.tdefPrepNdef(thisTdef);
 
 	0.1.wait;
-	"\n*** % stasrts ***\n\n".postf(thisTdef);
+	"\n*** % starts ***\n\n".postf(thisTdef);
 	q.tdefSeed(thisTdef);
 	0.1.wait;
 	// really make sure the ndef plays ...
