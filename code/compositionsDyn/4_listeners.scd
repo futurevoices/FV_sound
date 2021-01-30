@@ -1,73 +1,59 @@
-(
-
-
-// filter Ndef for all voices:
-/////// was fv_catchAll
-Ndef('fv_listo').ar(numChannels: 2);
-Ndef('fv_listo').play;
-
-Ndef('fv_listo')[5] = \filter -> {|in| HPF.ar(DelayN.ar(in, 0.2,  LFNoise0.ar(1/2).exprange(0.2, 1/200).lag(0.2, 0.5), 1, in), 40)  };
-
-Ndef('fv_listo')[10] = \filter -> {|in| HPF.ar(CombL.ar(in, 0.1, LFNoise0.ar(1).exprange(1/100, 1/4000).lag(0.2, 0.5), 2, 0.2), 40)  };
-
-Ndef('fv_listo')[20] = \filter -> {|in| HPF.ar(AdCVerb.ar(in, 4, 0.6), 40, 0.1)  };
-
-Ndef('fv_listo').set(\wet5, 0.75);
-Ndef('fv_listo').set(\wet10, 0.05);
-Ndef('fv_listo').set(\wet20, 0.075);
-
-
-
-(
-Ndef(\fv_companion, {
-	var in, ampTr, ampFollower, freq, hasFreq, sound, blipFr, mod, modFormant, modBW;
-	in = Ndef('fv_listo').ar(2);
-	ampTr = Amplitude.kr(in.mean, 0.05, 5);
-	ampFollower = 1 - (ampTr.madd(20).clip(0, 0.95).sqrt).lag2(0.02, 6);
-	# freq, hasFreq = Pitch.kr(in.mean);
-
-	modFormant = LFTri.kr([0.12, 0.09]).exprange(100, 1000);
-	modBW = modFormant * LFPar.kr(0.23).range(0.1, 0.8);
-	mod = LFNoise1.kr([2, 1, 1, 0.2, 0.11]);
-	blipFr = freq/[4/3, 3/4.2, 0.51, 16.02, 6.043, 41/20, 3, 5, 1/3, 1/4] * mod[0].range([0.95, 1], 1);
-
-	// sound = LPF.ar(Blip.ar(blipFr, 10000/freq, 10), freq*4, ampFollower * mod[1].range(0.3, 1));
-
-	sound = Splay.ar(
-		Formant.ar(
-			blipFr,
-			modFormant,
-			modBW,
-			ampFollower * mod.range(0.25, 1)
-		)
-	);
-	sound * 0.4
-}).play(vol: 0.2);
-);
-
 /*
-
-Ndef('fv_listo').gui;
-Ndef(\fv_companion).gui;
-
-
-b =  q.patienceDict.choose.buf.postln;
-
-(instrument: \singSamp, buf: b , amp: 1).play;
-(instrument: \singSampComb, buf: b , amp: 1).play;
-
-(instrument: \simpsamp, buf: b , amp: 0.2, pan: -1, lag: 0).play;      (instrument: \singSamp, buf: b , amp: 1/2, pan: 1, lag: -0).play;
+See:
+Miller Puckette, The Theory and Technique of Electronic Music, p. 126
+http://crca.ucsd.edu/~msp/techniques/latest/book.pdf
+"http://crca.ucsd.edu/~msp/techniques/latest/book-html/node77.html#sect5.ringmod".openOS;
 */
 
-// load brazil samples
-if(q.brazil.isNil){
-	q.brazil = q.loadSamples(q.soundlibsPath +/+ "_BRAZILPERC"); //
-};
+(
+MFdef('fv_listo').add(\prep, {
+	// filter Ndef for all voices:
+	/////// was fv_catchAll
+	Ndef('fv_listo').ar(numChannels: 2);
+	Ndef('fv_listo').play;
 
-/////#################
+	Ndef('fv_listo')[5] = \filter -> {|in| HPF.ar(DelayN.ar(in, 0.2,  LFNoise0.ar(1/2).exprange(0.2, 1/200).lag(0.2, 0.5), 1, in), 40)  };
 
+	Ndef('fv_listo')[10] = \filter -> {|in| HPF.ar(CombL.ar(in, 0.1, LFNoise0.ar(1).exprange(1/100, 1/4000).lag(0.2, 0.5), 2, 0.2), 40)  };
+
+	Ndef('fv_listo')[20] = \filter -> {|in| HPF.ar(AdCVerb.ar(in, 4, 0.6), 40, 0.1)  };
+
+	Ndef('fv_listo').set(\wet5, 0.75);
+	Ndef('fv_listo').set(\wet10, 0.05);
+	Ndef('fv_listo').set(\wet20, 0.075);
+
+	(
+		Ndef(\fv_companion, {
+			var in, ampTr, ampFollower, freq, hasFreq, sound, blipFr, mod, modFormant, modBW;
+			in = Ndef('fv_listo').ar(2);
+			ampTr = Amplitude.kr(in.mean, 0.05, 5);
+			ampFollower = 1 - (ampTr.madd(20).clip(0, 0.95).sqrt).lag2(0.02, 6);
+			# freq, hasFreq = Pitch.kr(in.mean);
+
+			modFormant = LFTri.kr([0.12, 0.09]).exprange(100, 1000);
+			modBW = modFormant * LFPar.kr(0.23).range(0.1, 0.8);
+			mod = LFNoise1.kr([2, 1, 1, 0.2, 0.11]);
+			blipFr = freq/[4/3, 3/4.2, 0.51, 16.02, 6.043, 41/20, 3, 5, 1/3, 1/4] * mod[0].range([0.95, 1], 1);
+
+			// sound = LPF.ar(Blip.ar(blipFr, 10000/freq, 10), freq*4, ampFollower * mod[1].range(0.3, 1));
+
+			sound = Splay.ar(
+				Formant.ar(
+					blipFr,
+					modFormant,
+					modBW,
+					ampFollower * mod.range(0.25, 1)
+				)
+			);
+			sound * 0.4
+		}).play(vol: 0.2);
+	);
+
+	MFdef(\brazil).value;
+});
 
 (
+Tdef( 'fv_listo').quant_(0).stop.play;
 Tdef( 'fv_listo' , { |ev|
 	var mykey = 'fv_listo';
 	var thisTdef = Tdef(mykey);
@@ -80,18 +66,18 @@ Tdef( 'fv_listo' , { |ev|
 	0.1.wait;
 	// so seed set from outside can be used when Tdef runs:
 	q.tdefSeed(thisTdef);
+	MFdef('fv_listo').value;
 
-	0.2.wait;
+	0.1.wait;
+
 	thisNdef.send.play(fadeTime: 0.1);
 
 	Ndef('fv_listo').play;
 	Ndef(\fv_companion).play(vol: 0.2);
 
 	loop {
-		1.wait;
-		// was:
-		// q.mainDict.values.rotate(200.rand).do { ... }
-		q.mainDict.values.scramble.do {|dict, i|
+		var mydict = q.bufmem.filterDict(q.mainDict);
+		mydict.asArray.scramble.do { |dict, i|
 			var buf;
 			q.readBufToDict(dict);
 			buf = dict.buf;
@@ -134,18 +120,10 @@ Tdef( 'fv_listo' , { |ev|
 				if (i.isPrime) {
 					3.wait;
 				};
-			}
-
+			};
+			1.wait;
 		}
 	}
-} ).stop.play;
+});
 );
-
 );
-
-/*
-See:
-Miller Puckette, The Theory and Technique of Electronic Music, p. 126
-http://crca.ucsd.edu/~msp/techniques/latest/book.pdf
-http://crca.ucsd.edu/~msp/techniques/latest/book-html/node77.html#sect5.ringmod
-*/
