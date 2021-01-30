@@ -18,8 +18,9 @@ q.mood .density = 2.62;
 (instrument: \glisson, sustain: 0.1, freq: 2000, freq2: 3000).play
 */
 
+Tdef(\fv_converse).quant = 0;
 Tdef(\fv_converse, { |ev|
-	var timeRange, allshortz, shortgroups, percs;
+	var timeRange, allshortz, allshortz2, shortgroups, percs;
 
 	// same for all Tdefs (except name):
 	var mykey = 'fv_converse';
@@ -38,8 +39,14 @@ Tdef(\fv_converse, { |ev|
 
 		timeRange = (exprand(2.0, 20) * [1, 1.5]).round(0.01);
 
-		allshortz = q.mainDict.selectAs ({ |dict|
-			dict.dur.inclusivelyBetween(*timeRange) }, Array);
+		allshortz = q.mainDict.select ({ |dict|
+			dict.dur.inclusivelyBetween(*timeRange) });
+
+		("raw allshorts: " + allshortz.size).postln;
+
+		allshortz = q.bufmem.filterDict(allshortz);
+
+		("filtered shorts: " + allshortz.size).postln;
 
 		percs = 5.collect { [ q.hang.choose, q.brazil.choose ] }.flat;
 
@@ -48,7 +55,7 @@ Tdef(\fv_converse, { |ev|
 			timeRange.round(0.001)
 		);
 
-		shortgroups = allshortz.curdle(0.15);
+		shortgroups = allshortz.asArray.scramble.curdle(0.15);
 		"groupsizes: ".post;
 		shortgroups.collect(_.size).postln;
 		shortgroups.do { |myshorts, j|
@@ -75,7 +82,13 @@ Tdef(\fv_converse, { |ev|
 				}
 			};
 
-			myshorts.do { |dict| q.readBufToDict(dict) };
+			myshorts.do { |dict|
+				q.readBufToDict(dict);
+				q.bufmem.addKey(dict.name);
+			};
+
+			q.bufmem.usedKeys.postln;
+
 			0.5.wait;
 
 			rrand(1, 2).do { |i|
@@ -116,5 +129,5 @@ Tdef(\fv_converse, { |ev|
 		1.wait;
 		"\n\n<<< converse LOOPING >>>\n\n".postln;
 	}
-}).play;
+}).stop.play;
 

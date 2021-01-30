@@ -1,23 +1,25 @@
 ////// this is the dynamic version of hangOn:
 /// it reads buffers newly on demand.
 
-fork {
+MFdef('fv_hangOn').add(\loadbufs, {
 	// PREP: make sure perc and brazil are there:
 	// load brazil samples if not there
 	MFdef(\brazil).value;
 	// load hang samples if not there
 	MFdef(\hang).value;
-	s.sync;
-	1.wait;
-	Tdef( 'fv_hangOn').play;
-};
+});
 
 ///// this is the Tdef that plays
 (
+Tdef('fv_hangOn').quant = 0;
+Tdef('fv_hangOn').stop.play;
+
 Tdef( 'fv_hangOn' , { |ev|
 	var mykey = 'fv_hangOn';
+	//
 	var thisTdef = Tdef(mykey);
 	var thisNdef = q.tdefPrepNdef(thisTdef);
+	MFdef(mykey).value;
 
 	"\n*** % starts ***\n\n".postf(thisTdef);
 	// wait a little ...
@@ -25,18 +27,25 @@ Tdef( 'fv_hangOn' , { |ev|
 	// so seed set from outside can be used when Tdef runs:
 	q.tdefSeed(thisTdef);
 
-	0.2.wait;
-	thisNdef.send.play(fadeTime: 0.1);
+	0.1.wait;
+
+	thisNdef.play(fadeTime: 0.1);
 
 	loop {
-		1.wait;
+		// could filter by mood? topic?
+		var mydict = q.mainDict;
+		// filter recents;
+		mydict = q.bufmem.filterDict(mydict);
 
-		q.mainDict.values.scramble.do {|dict, i|
+		"mydict size: %\n".postf(mydict.size);
+
+		mydict.values.scramble.do {|dict, i|
 			var hangbuf = q.hang.wrapAt(i);
 			var percbuf = q.brazil.wrapAt(i + (0.. 3.linrand));
 
 			var buf;
 			q.readBufToDict(dict);
+			q.bufmem.addKey(dict.name);
 			buf = dict.buf;
 			buf.path.basename.postcs;
 
@@ -48,13 +57,13 @@ Tdef( 'fv_hangOn' , { |ev|
 					buf: hangbuf,
 					amp: 0.25, pan: -1.0.rand2,
 					sustain: hangbuf.duration,
-					rate: { 5.bilinrand *2 }.dup(rrand(3, 7) ).midiratio,
+					rate: { 5.bilinrand * 2 }.dup(rrand(3, 7) ).midiratio,
 					strum: rrand(0.03, 0.3),
 					out: ev.bus
 				).play;
 
 				(hangbuf.duration).wait;
-				(exprand(0.2, 4)).wait;
+				(exprand(0.2, 1)).wait;
 
 				(instrument: \simpsamp,
 					buf: buf,
@@ -79,7 +88,9 @@ Tdef( 'fv_hangOn' , { |ev|
 			if (i.isPrime) {
 				3.wait;
 			}
-		}
+		};
+		"*** % looping ... \n".postf(thisTdef);
+		2.wait;
 	}
 });
 );
