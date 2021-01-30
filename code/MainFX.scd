@@ -120,13 +120,11 @@ ProxyChain.add3('dualMax', \filter -> { |in,
 ));
 );
 
-/*
 MainFX(s).clear;
-*/
+
 MainFX(s, 2, [\eq, \reverb, \dualMax, \ampFin]);
 
 MainFX(s).set(\drive, 0.7);
 
 MainFX(s).add(\eq, 1).add(\ampFin, 1).add(\reverb, 0.08);
 
-// MainFXGui(MainFX(s));

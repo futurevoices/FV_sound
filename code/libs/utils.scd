@@ -47,15 +47,16 @@ q.pdefSeed = { |q, pdef|
 ///////////////////////////////////
 /// make group and bus for each tdef:
 q.tdefPrepNdef = { |q, tdef|
-	var ndef = Ndef(tdef.key);
-	var evbus = tdef.get(\bus);
-	ndef.ar(2);
+	// this is the bus the events play into:
+	var evbus = tdef.get(\bus) ?? { Bus.audio(s, 2) };
+	// make or get same-named Ndef that reads from that bus
+	// so we have vol, can fadeout with .end, etc.
+	// start ndef process, but don't play it yet
+	var ndef = Ndef(tdef.key, { InFeedback.ar(evbus.index, 2) });
+	// store back into event:
 	tdef.set(\ndef, ndef);
-	// make a separate bus to play events to ...
-	evbus = evbus ?? { Bus.audio(s, 2) };
 	tdef.set(\bus, evbus);
-	// in the Ndef, read from evbus, so fadeout with .end works:
-	Ndef(tdef.key).prime({ InFeedback.ar(evbus.index, 2) });
+	// and return ndef
 	ndef;
 };
 

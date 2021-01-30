@@ -47,22 +47,27 @@ if (\PostLog.asClass.notNil) {
 // first, load SynthDef and sample loading libraries
 
 
-
+(
 "libs/a_functions.scd".loadRelative; // load all functions
 "libs/_SampleLib.scd".loadRelative;
 "libs/_reSampleLib.scd".loadRelative;
 "libs/_SynthLib.scd".loadRelative;
 "libs/dynamic_yamling.scd".loadRelative;
+);
 
+(
 "libs/utils.scd".loadRelative;
 "libs/langAnalysis.scd".loadRelative;
-"jinglers.scd".loadRelative;
+);
 
-"dailyRecompile.scd".loadRelative;
+//// "dailyRecompile.scd".loadRelative;
 
+(
 // load director and testAll Tdefs:
 "director_FV_tdef.scd".loadRelative;
+"jinglers.scd".loadRelative;
 "testAll_tdef.scd".loadRelative;
+);
 
 // for proxychain and MasterFX
 1000.do { |i| Spec.add(("wet"++i).asSymbol, \unipolar) };
@@ -97,6 +102,7 @@ Task {
 	};
 
 	2.wait;
+
 	// boot server, then start director:
 	s.waitForBoot {
 
