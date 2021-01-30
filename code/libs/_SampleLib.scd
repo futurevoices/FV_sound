@@ -236,7 +236,7 @@ q.mainSampDir = (thisProcess.nowExecutingPath.dirname +/+ "Samples").pathMatch.f
 /////======== 2020 better Test:
 q.findSamples = { |q, dir, mainDir|
 	var myDir = if(dir.contains("/") and: {mainDir.isNil} ){dir} { (mainDir ? q.mainSampDir) +/+ dir};
-	var myPaths = (myDir +/+ "*").pathMatch;
+	var myPaths = (myDir +/+ "*").standardizePath.pathMatch;
 	var mySFs = myPaths.collect{|p|
 		var sf = SoundFile.openRead(p); // test if SoundFile Class can handle it - regardless of file name ext !
 		if(sf.notNil){
@@ -259,7 +259,7 @@ c.choose.play;
 
 q.loadSamples = { |q, dir, mainDir, postAll = false|
 	var myDir = if(dir.contains("/") and: {mainDir.isNil} ){dir} { (mainDir ? q.mainSampDir) +/+ dir};
-	var myPaths = (myDir +/+ "*").postcln.pathMatch;
+	var myPaths = (myDir +/+ "*").postcln.standardizePath.pathMatch;
 
 	var mySFs = q.findSamples(dir, mainDir);
 

@@ -144,7 +144,7 @@ edict.buf.postln.play;
 ////////////////////// some  tests
 /*
 bench {
-"~/Seafile/Future_Voices/upload/contributions/""*.yaml".pathMatch.do { |path|
+"~/Seafile/Future_Voices/upload/contributions/""*.yaml".standardizePath.pathMatch.do { |path|
 var key = path.basename.drop(-5).asSymbol;
 if (q.mainDict[key].isNil) {
 q.mainDict.put(key, ());
@@ -155,13 +155,13 @@ q.mainDict.put(key, ());
 
 
 /*
-"~/*/*".pathMatch.size.postln; // */*/
+"~/*/*".standardizePath.pathMatch.size.postln; // */*/
 // ->  2247 files, 0.2 first time, 0.02 second time - caching
 
-"~/*/*/*" .pathMatch.size.postln; // */*/*/
+"~/*/*/*" .standardizePath.pathMatch.size.postln; // */*/*/
 
 /// 15114 files, 1.5sec first time, then 0.1 - caching!
 bench {
-"~/*/*/*".pathMatch.size.postln; /// */*/*/
+"~/*/*/*".standardizePath.pathMatch.size.postln; /// */*/*/
 };
 */

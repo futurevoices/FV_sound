@@ -31,7 +31,7 @@ q.readDictPath = "libs/a_readDict.scd".resolveRelative;
 //// contributions folder in its own auto-synced seafile folder
 q.yamlSearchPath = "~/Seafile/future_mirror/*.yaml".standardizePath;
 //// soundlibz folder in its own auto-synced seafile folder
-q.soundlibsPath = "~/Seafile/future_soundz/soundlibs/";
+q.soundlibsPath = "~/Seafile/future_soundz/soundlibs/".standardizePath;
 
 // get PostLog:
 if (\PostLog.asClass.notNil) {

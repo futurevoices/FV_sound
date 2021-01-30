@@ -5,10 +5,10 @@
 // ToDo: sample loader into general loader script
 
 MFdef('jinglers').add(\load, {
-	q.jinglePath = q.soundlibsPath +/+ "/_jinglers";
+	q.jinglePath = (q.soundlibsPath +/+ "/_jinglers").standardizePath;
 
 	// tell q where the jingle soundfiles are:
-	q.jinglePath = "~/Seafile/Future_Voices/soundlibs/_jinglers";
+	// q.jinglePath = "~/Seafile/Future_Voices/soundlibs/_jinglers".standardizePath;
 
 	//// to get the files, use name part + wildcard:
 	// (q.jinglePath +/+ "jinglers*.wav").pathMatch.size;
