@@ -5,31 +5,26 @@
 // LFNoise for pan and amp
 // repeat and overlap with next file
 
-{
-	//////// all necessary prep/checks go here:
-	// .....
-
-	////// then start the tdef:
-	Tdef('fv_grainbow').stop.play
-}.defer(0.2);
 
 Tdef('fv_grainbow').set(\randSeed, nil);
+
+Tdef('fv_grainbow').quant_(0).stop.play;
 
 Tdef('fv_grainbow', { |ev|
 	var mykey = 'fv_grainbow';
 	var thisTdef = Tdef(mykey);
 	var thisNdef = q.tdefPrepNdef(thisTdef);
 
-	"\n*** % starts ***\n\n".postf(thisTdef);
+	0.1.wait;
+	"\n*** % stasrts ***\n\n".postf(thisTdef);
 	q.tdefSeed(thisTdef);
-
-	0.2.wait;
+	0.1.wait;
 	// really make sure the ndef plays ...
-	thisNdef.send.play(fadeTime: 0.1);
+	thisNdef.play(fadeTime: 0.1);
 
 	loop {
-		var dicts = q.mainDict;
-		// dicts = dicts.select(_.dur < 10);
+		var dicts = q.bufmem.filterDict(q.mainDict);
+
 		dicts.values.scramble.do { |dict|
 			var dur = dict.dur, buf;
 			var numvoices = exprand(3, 8).round;
@@ -63,5 +58,6 @@ Tdef('fv_grainbow', { |ev|
 		};
 		1.wait;
 	};
+	"*** % looping ...\n".postf(thisNdef);
+	1.wait;
 });
-

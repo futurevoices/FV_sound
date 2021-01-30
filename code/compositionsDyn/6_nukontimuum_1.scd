@@ -1,30 +1,23 @@
-// q.kontimuumSnds.do(_.free); q.kontimuumSnds=nil;
-{
-	// if(q.kontimuumSnds.isNil){
-	// 	q.kontimuumSnds = q.loadSamples("upload_kont", "~/Seafile/JaMoP/");
-	// };
-
-	Tdef(\fv_kont_1).stop.play;
-
-}.defer(0.2);
 
 (
+Tdef('fv_kont_1').quant_(0).stop.play;
+
 Tdef('fv_kont_1', { |ev|
 	var mykey = 'fv_kont_1';
 	var thisTdef = Tdef(mykey);
 	var thisNdef = q.tdefPrepNdef(thisTdef);
-	var rout;
 
 	"\n*** % starts ***\n\n".postf(thisTdef);
+	0.1.wait;
 	q.tdefSeed(thisTdef);
+	0.1.wait;
 
-	0.2.wait;
-	thisNdef.send.play(fadeTime: 0.1);
-
-	rout = Pxrand(q.mainDict.values, inf).asStream;
+	thisNdef.play(fadeTime: 0.1);
 
 	inf.do { |i|
-		var dict = rout.next;
+		var mydict = q.bufmem.filterDict(q.mainDict);
+
+		mydict.values.scramble.do { |dict|
 		var rate = exprand(0.94, 1.05);
 		var rateFast = rrand(10, 20);
 		var buf;
@@ -62,7 +55,8 @@ Tdef('fv_kont_1', { |ev|
 			out: ev.bus, rate: rateFast, pan: #[-1,1]@@i ).play;
 		(instrument: \simpsamp, buf: buf.bufnum, amp: 0.1,
 			out: ev.bus, rate: rateFast*0.8, pan: #[1,-1]@@i  ).play;
-
+		};
+		1.wait;
 	}
 });
 );
