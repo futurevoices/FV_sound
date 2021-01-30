@@ -4,29 +4,35 @@
 // play clustered by language, with a BG sound.
 // @ class, 17.06.2020
 
-{
+
+
+MFdef(\fv_lang_clusters).add(\preload, {
+	/// make all interesting numbers parameters:
+	Ndef(\fv_forml).addSpec(\pitch, [15, 73]);
+	Ndef(\fv_forml).addSpec(\chaos, [1.0, 2.0]);
+	Ndef(\fv_forml).addSpec(\attack, [0.001, 0.3, \exp]);
+	Ndef(\fv_forml).addSpec(\decay, [0.03, 5, \exp]);
+
+	Ndef(\fv_forml).fadeTime = 1;
+
+	Ndef(\fv_forml, { |chaos = 2.0, pitch = 42, attack = 0.05, decay = 0.10|
+		var exciter = Crackle.ar(chaos ! 2, 0.1);
+		var freq = pitch.midicps;
+		var ampcomp = AmpComp.kr(freq);
+		var filter = Formlet.ar(
+			exciter * ampcomp,
+			pitch.midicps,
+			attack,
+			decay * ampcomp
+		);
+		filter;
+	}).play;
+
 	MFdef(\hang).value;
-	Tdef(\fv_lang_clusters).stop.play;
-}.defer(0.2);
-
-(
-/// make all interesting numbers parameters:
-Ndef(\fv_forml).addSpec(\pitch, [15, 73]);
-Ndef(\fv_forml).addSpec(\chaos, [1.0, 2.0]);
-Ndef(\fv_forml).addSpec(\attack, [0.001, 0.3, \exp]);
-Ndef(\fv_forml).addSpec(\decay, [0.03, 5, \exp]);
-
-Ndef(\fv_forml, { |chaos = 2.0, pitch = 42, attack = 0.05, decay = 0.10|
-	var exciter = Crackle.ar(chaos ! 2, 0.1);
-	var filter = Formlet.ar(
-		exciter,
-		pitch.midicps,
-		attack,
-		decay
-	);
-	filter;
 });
 
+(
+Tdef(\fv_lang_clusters).quant_(0).stop.play;
 
 Tdef(\fv_lang_clusters, { |ev|
 
@@ -41,9 +47,10 @@ Tdef(\fv_lang_clusters, { |ev|
 	// so seed set from outside can be used when Tdef runs:
 	q.tdefSeed(thisTdef);
 
-	0.2.wait;
-	thisNdef.send.play(fadeTime: 0.1);
+	MFdef(\fv_lang_clusters).value;
 
+	0.1.wait;
+	thisNdef.send.play(fadeTime: 0.1);
 	Ndef(\fv_forml).play(vol: 0.1);
 
 	// ////////// COURSE FOLDER VERSION:
@@ -62,6 +69,8 @@ Tdef(\fv_lang_clusters, { |ev|
 	q.lang.names;      // just names sorted by numEntries
 
 	loop {
+		var mydict = q.bufmem.filterDict(q.mainDict);
+
 		langKeys = q.lang.names.scramble;
 
 		"*** lang keys: ***".postln;
@@ -72,7 +81,7 @@ Tdef(\fv_lang_clusters, { |ev|
 		langKeys.do { |lang, i|
 			var hangbuf = { q.hang.choose } ! 2;
 
-			var entriesPerLang = q.mainDict.values.select { |sd|
+			var entriesPerLang = mydict.values.select { |sd|
 				sd.langKey == lang
 				// and: { sd.soundfile.duration < 40 }
 			}.scramble.keep(rrand(8, 13));
@@ -104,6 +113,7 @@ Tdef(\fv_lang_clusters, { |ev|
 
 			entriesPerLang.do {|entry, j|
 				var buf = q.readBufToDict(entry).buf;
+				q.bufmem.addKey(entry.name);
 
 				MFdef(\sendInfo).value(entry.name, q.activeTdef.key);
 
