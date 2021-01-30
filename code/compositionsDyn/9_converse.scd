@@ -86,9 +86,10 @@ Tdef(\fv_converse, { |ev|
 				myshorts.scramble.do { |dict, j|
 					(dict.literal_text ?? dict.name.asString).keep(60).postcs;
 
-					(instrument: \simpsamp, buf: dict.buf,
+					(instrument: \simpsamp,
+						buf: dict.buf,
 						amp: 0.3, pan: [-0.9, 0.9].wrapAt(j),
-					//	rate: rate,
+						rate: rate,
 						out: ev.bus
 					).play;
 
@@ -97,15 +98,15 @@ Tdef(\fv_converse, { |ev|
 					/// whistle
 					(instrument: \glisson, sustain: exprand(0.02, 0.2),
 						freq: exprand(400, 4000), freq2: exprand(400, 4000),
-						pan: 1.0.rand2,
+						pan: [-0.1, 0.1].wrapAt(j) * j,
+						rate: rate,
 						out: ev.bus
 					).play;
 
 					// perc
 					(instrument: \simpsamp, buf: percs[j],
-						lag: 0.3,
 						rate: rate,
-						amp: 0.3, pan: [-0.1, 0.1].wrapAt(i) * i,
+						amp: 0.3, pan: [-0.1, 0.1].wrapAt(j) * j,
 						out: ev.bus
 					).play;
 				}
