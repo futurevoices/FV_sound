@@ -90,7 +90,7 @@ WinBounds.addMake(\FutureVoices, {
 	.string_(" ... ").align_(\center)
 	.font_(Font.default.copy.size_(20));
 	TdefGui(Tdef(\director_FV), 5, q.tdefwin, 380@120);
-	TdefGui(Tdef(\testAll), 2, q.tdefwin, 380@50);
+	TdefGui(Tdef(\testAll), 4, q.tdefwin, 380@50);
 	q.autobut = Button(q.tdefwin, 90@30).states_([["Auto"], ["Manual"]]);
 
 	q.tdpop = EZPopUpMenu(q.tdefwin, 280@30, \tdef2show, [\none, \yet], { |pop|
@@ -106,7 +106,7 @@ WinBounds.addMake(\FutureVoices, {
 		q.fvkeys = try { q.fvTdefs.keys(Array).sort } ? [];
 		q.tdpopitems = q.tdpop.items.collect(_.key);
 		if (q.fvkeys != q.tdpopitems) {
-			"setting tdpop".postln;
+			// "setting tdpop".postln;
 			q.tdpop.items = q.fvkeys;
 		};
 		if (q.autobut.value == 0) {
