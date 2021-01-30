@@ -151,15 +151,37 @@ q=q?();
 //  -----------------------------------------------------------
 // MONO SynthDefs //-------------------------------------
 
+// // synthdef to play a buffer. start: in seconds.
+// SynthDef(\simpsamp, { |out, buf, amp=0.1, rate = 1, pan=0, start|
+// 	var snd = PlayBuf.ar(1,
+// 		buf, rate, 1,
+// 		start * BufSampleRate.ir(buf) + (rate.sign),
+// 		0, 2, doneAction: 2
+// 	);
+// 	OffsetOut.ar(out, Pan2.ar(snd, pan, amp));
+// }).add;
+
 // synthdef to play a buffer. start: in seconds.
 SynthDef(\simpsamp, { |out, buf, amp=0.1, rate = 1, pan=0, start|
-	var snd = PlayBuf.ar(1,
-		buf, rate, 1,
-		start * BufSampleRate.ir(buf),
-		0, 2, doneAction: 2
+	var revOffset = rate.sign.min(0) * 2;
+	var start0 = start * BufSampleRate.ir(buf);
+	// wrap start time to just before end for negative rates,
+	// so sound does not stop immediately on rate -1
+	var wrappedStart = (start0 + revOffset).wrap(0, BufFrames.ir(buf) - 2);
+	var snd = PlayBuf.ar(1, buf,
+		rate * BufRateScale.kr(buf), 1,
+		wrappedStart, doneAction: 2
 	);
 	OffsetOut.ar(out, Pan2.ar(snd, pan, amp));
 }).add;
+
+/*** test:
+(instrument: \simpsamp, buf: q.bufLast, rate: 1).play;
+(instrument: \simpsamp, buf: q.bufLast, start: 4, rate: 1).play;
+(instrument: \simpsamp, buf: q.bufLast, rate: -1).play;
+(instrument: \simpsamp, buf: q.bufLast, start: 4, rate: -1).play;
+***/
+
 (
 SynthDef(\sampGrain, { |out, buf, amp=0.1, rate = 1, stretch=1, pan=0, ovlp = 6, trigrate=33, jitter=0.01|
 	var bdur = BufDur.ir(buf);
