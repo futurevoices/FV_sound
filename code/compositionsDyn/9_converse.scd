@@ -4,8 +4,8 @@ short sentences alternate between left and right
 short whistles, short perc sounds as punctuation
 */
 
-MFdef('prep_converse').add(\mood, {
-	'prep_converse'.postcs;
+MFdef('fv_converse').add(\mood, {
+	MFdef('fv_converse').postcs;
 	q.mood = q.mood ? (density: 1.1);
 });
 
@@ -19,18 +19,19 @@ q.mood .density = 2.62;
 */
 
 Tdef(\fv_converse, { |ev|
-	var timeRange, allshortz, myshorts, percs;
-	// same for all Tdefs:
+	var timeRange, allshortz, shortgroups, percs;
+
+	// same for all Tdefs (except name):
 	var mykey = 'fv_converse';
 	var thisTdef = Tdef(mykey);
 	var thisNdef = q.tdefPrepNdef(thisTdef);
 	"\n*** % starts ***\n\n".postf(thisTdef);
-	MFdef('prep_converse').value;
+	MFdef(mykey).value;
 
 	0.1.wait;
-	// so seed set from outside can be used when Tdef runs:
+	// wait so that seed set from outside can be used when Tdef runs:
 	q.tdefSeed(thisTdef);
-	0.2.wait;
+	0.1.wait;
 	thisNdef.play(fadeTime: 0.1);
 
 	loop {
@@ -39,7 +40,6 @@ Tdef(\fv_converse, { |ev|
 
 		allshortz = q.mainDict.selectAs ({ |dict|
 			dict.dur.inclusivelyBetween(*timeRange) }, Array);
-		myshorts;
 
 		percs = 5.collect { [ q.hang.choose, q.brazil.choose ] }.flat;
 
@@ -48,7 +48,10 @@ Tdef(\fv_converse, { |ev|
 			timeRange.round(0.001)
 		);
 
-		allshortz.curdle(0.15).do { |myshorts, j|
+		shortgroups = allshortz.curdle(0.15);
+		"groupsizes: ".post;
+		shortgroups.collect(_.size).postln;
+		shortgroups.do { |myshorts, j|
 			"shortz group % - % files:\n".postf(j, myshorts.size);
 			// myshorts.do { |entry| entry.literal_text.keep(80).postcs };
 
