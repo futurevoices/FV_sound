@@ -58,6 +58,7 @@ if (\PostLog.asClass.notNil) {
 (
 "libs/utils.scd".loadRelative;
 "libs/langAnalysis.scd".loadRelative;
+"libs/rememberRecentBufs.scd".loadRelative;
 );
 
 //// "dailyRecompile.scd".loadRelative;

@@ -1,8 +1,9 @@
 ////// sketch for how to remember recent buf/yaml keys
 
+(
 q.bufmem = ();
 q.bufmem.usedKeys = List[];
-q.bufmem.maxMems = q.mainDict.size div: 2;
+q.bufmem.maxMems = min(50, q.mainDict.size div: 2);
 q.bufmem.addKey = { |mem, newkey|
 	// remove if already there
 	mem.usedKeys.remove(newkey);
@@ -19,18 +20,30 @@ q.bufmem.addKey = { |mem, newkey|
 q.bufmem.filterDict = { |bufmem, dict|
 	dict.select { |value, key| q.bufmem.usedKeys.includes(key).not };
 };
+)
 
+/*
+q.mainDict.size;
+q.bufmem.filterDict(q.mainDict).size;
 
-/// use case 1: filter recents from full dict, then choose
-q.newdict = q.bufmem.filterDict(q.mainDict).choose;
-q.bufmem.addKey(q.newdict.name);
-q.readBufToDict(q.newdict);
-q.newdict.buf.play;
+////// use case 1: filter recents from full dict, then choose
+(
+fork {
+	10.do {
+		var syn;
+		q.newdict = q.bufmem.filterDict(q.mainDict).choose;
+		q.bufmem.addKey(q.newdict.name);
 
+		q.readBufToDict(q.newdict);
+		syn = q.newdict.buf.play;
+		defer ({ syn.free }, 1);
+		0.5.wait;
+	};
+};
+)
 q.bufmem.usedKeys.size;
 
 /// use case 2: make a subset of full dict, filter that:
-q.ourLangs.size
 
 (
 fork {
@@ -53,8 +66,4 @@ fork {
 )
 
 q.bufmem.usedKeys.size;
-().play
-
-
-q.bufmem.addKey(\otto);
-q.bufmem.addKey(\ada);
+*/
