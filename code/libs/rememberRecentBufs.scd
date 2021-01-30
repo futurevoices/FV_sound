@@ -3,7 +3,7 @@
 (
 q.bufmem = ();
 q.bufmem.usedKeys = List[];
-q.bufmem.maxMems = min(50, q.mainDict.size div: 2);
+q.bufmem.maxMems = 50;
 q.bufmem.addKey = { |mem, newkey|
 	// remove if already there
 	mem.usedKeys.remove(newkey);
@@ -19,6 +19,13 @@ q.bufmem.addKey = { |mem, newkey|
 // remove all recent buffers from a dict of dicts
 q.bufmem.filterDict = { |bufmem, dict|
 	dict.select { |value, key| q.bufmem.usedKeys.includes(key).not };
+};
+// all collections
+q.bufmem.filter = { |bufmem, coll|
+	coll.select { |elem, key| q.bufmem.usedKeys.includes(elem.name) };
+};
+q.bufmem.filterNames = { |bufmem, list|
+	list.removeAll(q.bufmem.usedKeys)
 };
 )
 
