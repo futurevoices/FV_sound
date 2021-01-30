@@ -1,73 +1,81 @@
 ////// this is the dynamic version of fv_stereoBattle:
 /// it reads buffers newly on demand.
-{
-	Tdef('fv_stereoBattle').stop.play;
-}.defer(0.1);
 
 (
+Tdef('fv_stereoBattle').quant_(0).stop.play;
+
 Tdef( 'fv_stereoBattle' , { |ev|
 	var mykey = 'fv_stereoBattle';
 	var thisTdef = Tdef(mykey);
 	var thisNdef = q.tdefPrepNdef(thisTdef);
 
+	0.1.wait;
 	q.tdefSeed(thisTdef);
-	0.2.wait;
+	0.1.wait;
 	thisNdef.fadeTime_(0.1).send.play;
 
 	"\n*** % starts ***\n\n".postf(thisTdef);
 
+
 	inf.do { |i|
-		var voiceDict = q.mainDict.values.choose;
-		var stretch = exprand(1.5, 2.5);
-		var pan = (i%2*2-1) * rrand(0.85, 0.95);
+		var mydict = q.bufmem.filterDict(q.mainDict);
+		mydict.asArray.scramble.do { |voiceDict|
+			var stretch = exprand(1.5, 2.5);
+			var pan = (i%2*2-1) * rrand(0.85, 0.95);
 
-		var sample1;
-		q.readBufToDict(voiceDict);
-		sample1 = voiceDict.buf;
+			var sample1;
+			q.readBufToDict(voiceDict);
+			q.bufmem.addKey(voiceDict.name);
 
-		MFdef(\sendInfo).value(voiceDict.name, q.activeTdef.key);
+			sample1 = voiceDict.buf;
 
-		voiceDict.name.cs.postln;
+			MFdef(\sendInfo).value(voiceDict.name, q.activeTdef.key);
 
-		if (sample1.notNil) {
+			voiceDict.name.cs.postln;
 
-			// one side: normal, 1 sec later
-			(
-				instrument: \simpsamp,
-				buf: sample1,
-				amp: 0.5, pan: pan, out: ev.bus,
-				sustain: sample1.duration,
-				lag: 1
-			).play;
+			if (sample1.notNil) {
 
-			// other side: glitching up, 1 sec later
-			(instrument: \simpsampGlitch, buf: sample1,
-				rate: exprand(9/8, 8/9),
-				pan: pan.neg, amp: 0.3,
-				out: ev.bus,
-				start: 0,
-				lag: 1).play;
+				// one side: normal, 1 sec later
+				(
+					instrument: \simpsamp,
+					buf: sample1,
+					amp: 0.5, pan: pan, out: ev.bus,
+					sustain: sample1.duration,
+					lag: 1
+				).play;
 
-			// middle: 2 bg layers, granulated
-			(instrument: \sampGrain, buf: sample1,
-				out: ev.bus,
-				rate: exprand(1/2, 2), stretch: stretch * 2.5,
-				pan: -0.2, ovlp: exprand(5, 50), trigrate: exprand(13, 100),
-				jitter: 0.6.linrand, amp: 0.02 * rrand(1, 2.0)
-			).play;
-			(instrument: \sampGrain, buf: sample1,
-				rate: exprand(1/2, 2), stretch: stretch * 2.5,
-				pan: 0.2, ovlp: exprand(5, 50),
-				amp: 0.02 * rrand(1, 2.0),
-				out: ev.bus,
-				trigrate: exprand(13, 100),
-				jitter: 0.6.linrand,
-			).play;
-			"waiting for: ".post;
-			( sample1.duration * stretch + 1).postln.wait;
+				// other side: glitching up, 1 sec later
+				(instrument: \simpsampGlitch, buf: sample1,
+					rate: exprand(9/8, 8/9),
+					pan: pan.neg, amp: 0.3,
+					out: ev.bus,
+					start: 0,
+					lag: 1).play;
 
+				// middle: 2 bg layers, granulated
+				(instrument: \sampGrain, buf: sample1,
+					out: ev.bus,
+					rate: exprand(1/2, 2), stretch: stretch * 2.5,
+					pan: -0.2, ovlp: exprand(5, 50), trigrate: exprand(13, 100),
+					jitter: 0.6.linrand, amp: 0.02 * rrand(1, 2.0)
+				).play;
+
+				(instrument: \sampGrain, buf: sample1,
+					rate: exprand(1/2, 2), stretch: stretch * 2.5,
+					pan: 0.2, ovlp: exprand(5, 50),
+					amp: 0.02 * rrand(1, 2.0),
+					out: ev.bus,
+					trigrate: exprand(13, 100),
+					jitter: 0.6.linrand,
+				).play;
+				"waiting for: ".post;
+				( sample1.duration * stretch + 1).postln.wait;
+
+			};
 		};
+		"*** % looping ...\n\n".postf(thisTdef);
+		2.wait;
 	}
-} );
+});
 );
 
