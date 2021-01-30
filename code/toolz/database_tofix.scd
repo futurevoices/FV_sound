@@ -19,8 +19,7 @@ q.mainDict.do { |dict|
 };
 ~missingKeys;
 
-////// buf is harmless, dialect and lat too,
-////// but the others are not OK!
+////// buf, lat, dialect are harmless, others not
 
 ( 'lat': 46, 'buf': 195, 'dialect': 168, 'tags': 1,
   'literal_text_english': 4, 'speaker_native_language': 1, 'keywords': 1 )
@@ -32,7 +31,7 @@ q.mainDict.collect(_.size).count(_ == 1); //
 q.mainDict.select(_.size < 2)
 
 database consistency:
-/// how many files have empty strings
+/// how many files have empty strings?
 q.mainDict.select { |d| d[\literal_text_english] == "" }.size; // 0
 q.mainDict.select { |d| d[\literal_text_english] == nil }.size; // 4 nils?
 q.mainDict.select { |d| d[\literal_text] == nil }.size; // 0
