@@ -9,9 +9,8 @@ Tdef(\testAll).addSpec(\speedup, [1, 30, \exp, 0.1]);
 
 Tdef(\testAll, { |ev|
 
-	// make sure main dict is loaded / reloaded as needed
-	q.readDictPath.load;
-	s.sync;
+	Tdef(\stopAll).stop.play;
+	Tdef(\jingleDir).embed;
 
 	q.composChoices = q.composPath.pathMatch;
 
@@ -21,10 +20,10 @@ Tdef(\testAll, { |ev|
 
 		Tdef(\stopAll).stop.play;
 
-		2.wait;
+		1.wait;
 
 		"\n\n*** starting composition %\n".postf(q.chosenFile.basename);
-		ev.episodeTime = 15;
+
 		"*** plays for % seconds \n\n".postf(ev.episodeTime.round(1));
 
 		activeTdef = q.chosenFile.load; // load and play!
