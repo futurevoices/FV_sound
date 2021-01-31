@@ -113,7 +113,7 @@ if (s.serverRunning) {
 
 ///// get next buffer, read soundfile given in dict,
 ///// and add it to the dict:
-q.readBufToDict = { |q, entrydict|
+q.readBufToDict = { |q, entrydict, postTextSize = 40|
 	var sf = entrydict.soundfile;
 	// always get next free buffer in pool
 	var buf = q.bufpoolGet;
@@ -122,14 +122,14 @@ q.readBufToDict = { |q, entrydict|
 	buf.normalize;
 	buf.updateInfo;
 	s.sync;
-	"% - dur: %\n   ".postf(
+	"% - dur: %\n'%'\n".postf(
 		buf.path.basename,
-		buf.duration.round(0.01)
+		buf.duration.round(0.01),
+		entrydict.literal_text.keep(postTextSize);
 	);
 	entrydict.buf = buf;
 	entrydict;
 };
-
 
 
 // test buffer reading, benchmark its timing

@@ -86,9 +86,9 @@ WinBounds.addMake(\mixer, {
 WinBounds.addMake(\FutureVoices, {
 	q.tdefwin = Window(\FutureVoices).front.moveTo(300, Window.availableBounds.height - 100);
 	q.tdefwin.addFlowLayout;
-	q.statusView = StaticText(q.tdefwin, 400@30)
+	q.statusView = StaticText(q.tdefwin, 400@40)
 	.string_(" ... ").align_(\center)
-	.font_(Font.default.copy.size_(20));
+	.font_(Font.default.copy.size_(16));
 	TdefGui(Tdef(\director_FV), 5, q.tdefwin, 380@120);
 	TdefGui(Tdef(\testAll), 4, q.tdefwin, 380@50);
 	q.autobut = Button(q.tdefwin, 90@30).states_([["Auto"], ["Manual"]]);
@@ -102,7 +102,8 @@ WinBounds.addMake(\FutureVoices, {
 	q.tdefguiskip.stop;
 	q.tdefguiskip = SkipJack({
 		q.statusView.string = "% contributions in % languages"
-		.format(q.mainDict.size, q.lang.names.size);
+		.format(q.mainDict.size, q.lang.names.size)
+		++ "\nTotal duration: %".format(q.mainDict.sum(_.dur).asTimeString);
 		q.fvkeys = try { q.fvTdefs.keys(Array).sort } ? [];
 		q.tdpopitems = q.tdpop.items.collect(_.key);
 		if (q.fvkeys != q.tdpopitems) {
