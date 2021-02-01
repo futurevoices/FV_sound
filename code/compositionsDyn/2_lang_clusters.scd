@@ -39,7 +39,6 @@ Tdef(\fv_lang_clusters, { |ev|
 	var mykey = 'fv_lang_clusters';
 	var thisTdef = Tdef(mykey);
 	var thisNdef = q.tdefPrepNdef(thisTdef);
-	var langKeys;
 
 	"\n*** % starts ***\n\n".postf(thisTdef);
 	// wait a little ...
@@ -50,7 +49,7 @@ Tdef(\fv_lang_clusters, { |ev|
 	MFdef(\fv_lang_clusters).value;
 
 	0.1.wait;
-	thisNdef.send.play(fadeTime: 0.1);
+	thisNdef.play(fadeTime: 0.1);
 	Ndef(\fv_forml).play(vol: 0.1);
 
 	// ////////// COURSE FOLDER VERSION:
@@ -70,23 +69,27 @@ Tdef(\fv_lang_clusters, { |ev|
 
 	loop {
 		var mydict = q.bufmem.filterDict(q.mainDict);
-
-		langKeys = q.lang.names.scramble;
+		var langKeys = q.lang.names.scramble;
+		var dictsPerLang;
 
 		"*** lang keys: ***".postln;
 		langKeys.postcs;
 
-		thisNdef.play;
-
-		langKeys.do { |lang, i|
-			var hangbuf = { q.hang.choose } ! 2;
-
-			var entriesPerLang = mydict.values.select { |sd|
+		dictsPerLang = langKeys.collect { |lang|
+			mydict.values.select { |sd|
 				sd.langKey == lang
 				// and: { sd.soundfile.duration < 40 }
 			}.scramble.keep(rrand(8, 13));
+		}.select { |langdict| langdict.size > 0 };
 
-			var sfdurs = entriesPerLang.collect { |sd|
+		dictsPerLang.collect(_.size);
+
+		dictsPerLang.do { |langdict|
+			var lang = langdict.choose.langKey;
+			var hangbuf = { q.hang.choose } ! 2;
+
+
+			var sfdurs = langdict.collect { |sd|
 				sd.soundfile.duration.round(0.01)
 			};
 
@@ -111,7 +114,7 @@ Tdef(\fv_lang_clusters, { |ev|
 
 			rrand(1, 4.0).wait;
 
-			entriesPerLang.do {|entry, j|
+			langdict.do {|entry, j|
 				var buf = q.readBufToDict(entry).buf;
 				q.bufmem.addKey(entry.name);
 
@@ -131,7 +134,7 @@ Tdef(\fv_lang_clusters, { |ev|
 			// "wait lost last soundfile to end...".postln;
 			waitForEnds.wait;
 
-			///////// maybe overlap single-file langauges?
+			///////// maybe overlap single-file languages?
 			// if (entriesPerLang.size > 1) {
 			// 	waitForEnds.wait;
 			// } {
