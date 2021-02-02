@@ -11,7 +11,7 @@ MFdef('fv_listo').add(\prep, {
 	/////// was fv_catchAll
 	Ndef('fv_listo').ar(numChannels: 2);
 	Ndef('fv_listo').play;
-
+	try { s.sync };
 	Ndef('fv_listo')[5] = \filter -> {|in| HPF.ar(DelayN.ar(in, 0.2,  LFNoise0.ar(1/2).exprange(0.2, 1/200).lag(0.2, 0.5), 1, in), 40)  };
 
 	Ndef('fv_listo')[10] = \filter -> {|in| HPF.ar(CombL.ar(in, 0.1, LFNoise0.ar(1).exprange(1/100, 1/4000).lag(0.2, 0.5), 2, 0.2), 40)  };
