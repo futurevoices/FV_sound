@@ -31,14 +31,14 @@ MFdef('jinglers').add(\load, {
 });
 
 
-if (\DayTimer.asClass.notNil) {
-	\DayTimer.asClass.start.putDate(\jingle, { |date|
-		if ([15, 30, 45].includes(date.minute) and: (date.second == 0)) {
-			date.stamp.postln;
-			Tdef(\jingleDir.postln).play;
-		};
-	});
-};
+// if (\DayTimer.asClass.notNil) {
+// 	\DayTimer.asClass.start.putDate(\jingle, { |date|
+// 		if ([15, 30, 45].includes(date.minute) and: (date.second == 0)) {
+// 			date.stamp.postln;
+// 			Tdef(\jingleDir.postln).play;
+// 		};
+// 	});
+// };
 
 
 (
