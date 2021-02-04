@@ -9,6 +9,7 @@ is the time at which all soundfiles play;
 timeWarp: 0 means ramp is linear,
 -1 means ramp begins slow and speeds up
 1 means ramp starts fast and then adds up slower
+
 */
 
 MFdef('fv_pyramid').add(\prep, {
@@ -17,10 +18,17 @@ MFdef('fv_pyramid').add(\prep, {
 
 ///// this is the Tdef that plays
 (
+
 // make sure tdef starts instantly:
 Tdef('fv_pyramid').quant = 0;
 // and stop first in case it is running
 Tdef('fv_pyramid').stop.play;
+Tdef('fv_pyramid').set(\chosenDur, 120);
+Tdef('fv_pyramid').set(\randSeed, nil);
+
+Tdef('fv_pyramid').addSpec(\numEntries, [10, q.mainDict.size, \lin, 1]);
+Tdef('fv_pyramid').addSpec(\peakTime, [0, 1]);
+Tdef('fv_pyramid').addSpec(\timeWarp, [-2, 2]); // start slow, end fast
 
 
 Tdef('fv_pyramid').set(\numEntries, 100);
@@ -33,6 +41,8 @@ Tdef( 'fv_pyramid' , { |ev|
 	var mykey = 'fv_pyramid';
 	var thisTdef = Tdef(mykey);
 	var thisNdef = q.tdefPrepNdef(thisTdef);
+	var time0 = Main.elapsedTime;
+	var timeSoFar, myRemainTime;
 	MFdef(mykey).value;
 
 	"\n*** % starts ***\n\n".postf(thisTdef);
@@ -40,6 +50,7 @@ Tdef( 'fv_pyramid' , { |ev|
 	q.tdefSeed(thisTdef);
 	0.1.wait;
 	thisNdef.play(fadeTime: 0.1);
+
 
 	/////// BODY OF this composition:
 	loop {
@@ -53,6 +64,15 @@ Tdef( 'fv_pyramid' , { |ev|
 			time + myChoices[i].dur };
 		var lastendtime = endtimes.maxItem;
 
+		var introbuf = q.brazil.choose;
+
+		//
+		(instrument: \simpsamp, amp: 0.4, buf: introbuf, rate: [-1, 1], pan: [-1, 1].scramble).play;
+		introbuf.duration.wait;
+
+		// compTdef, startedTime, intendedDur, projected next dur
+		MFdef(\adjustTime).value(thisTdef, time0, ev.chosenDur, lastendtime);
+
 		// defer { waittimes.plot };
 		// waittimes.postln;
 
@@ -63,7 +83,8 @@ Tdef( 'fv_pyramid' , { |ev|
 			fork { q.readBufToDict(entry) };
 			fork ({
 				0.5.wait;
-				(instrument: \simpsamp, buf: entry.buf, pan: 1.0.rand2).play;
+				(instrument: \simpsamp, buf: entry.buf,
+					amp: 0.3, pan: 1.0.rand2).play;
 			});
 			time.wait;
 		};
@@ -73,7 +94,7 @@ Tdef( 'fv_pyramid' , { |ev|
 		// general end of loop, with safety wait for empty choices:
 		"*** % looping ... \n".postf(thisTdef);
 		1.wait;
-	};
+		};
 
 });
 )

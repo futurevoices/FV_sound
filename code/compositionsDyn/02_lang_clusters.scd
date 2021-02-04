@@ -33,12 +33,14 @@ MFdef(\fv_lang_clusters).add(\preload, {
 
 (
 Tdef(\fv_lang_clusters).quant_(0).stop.play;
+Tdef('fv_lang_clusters').set(\chosenDur, 120);
 
 Tdef(\fv_lang_clusters, { |ev|
 
 	var mykey = 'fv_lang_clusters';
 	var thisTdef = Tdef(mykey);
 	var thisNdef = q.tdefPrepNdef(thisTdef);
+	var time0 = Main.elapsedTime;
 
 	"\n*** % starts ***\n\n".postf(thisTdef);
 	// wait a little ...
@@ -108,6 +110,9 @@ Tdef(\fv_lang_clusters, { |ev|
 			// "endTimes: %\n".postf(endTimes);
 			// "waitForEnds: %\n".postf(waitForEnds);
 
+			// compTdef, startedTime, intendedDur, projected next dur
+			MFdef(\adjustTime).value(thisTdef, time0, ev.chosenDur, lastEndTime);
+
 			// new lang: change background sound
 			Ndef(\fv_forml).fadeTime = rrand(0, 2.0);
 			Ndef(\fv_forml).xset(\pitch, exprand(40, 75));
@@ -115,10 +120,13 @@ Tdef(\fv_lang_clusters, { |ev|
 			rrand(1, 4.0).wait;
 
 			langdict.do {|entry, j|
-				var buf = q.readBufToDict(entry).buf;
-				q.bufmem.addKey(entry.name);
+				var buf;
 
 				MFdef(\sendInfo).value(entry.name, q.activeTdef.key);
+
+				buf = q.readBufToDict(entry).buf;
+				q.bufmem.addKey(entry.name);
+
 
 				(instrument: \simpsamp,
 					buf: buf,

@@ -13,13 +13,13 @@ MFdef('fv_hangOn').add(\loadbufs, {
 (
 Tdef('fv_hangOn').quant = 0;
 Tdef('fv_hangOn').stop.play;
+Tdef('fv_hangOn').set(\chosenDur, 120);
 
 Tdef( 'fv_hangOn' , { |ev|
 	var mykey = 'fv_hangOn';
-	//
 	var thisTdef = Tdef(mykey);
 	var thisNdef = q.tdefPrepNdef(thisTdef);
-	MFdef(mykey).value;
+	var time0 = Main.elapsedTime;
 
 	"\n*** % starts ***\n\n".postf(thisTdef);
 	// wait a little ...
@@ -28,6 +28,8 @@ Tdef( 'fv_hangOn' , { |ev|
 	q.tdefSeed(thisTdef);
 
 	0.1.wait;
+
+	MFdef(mykey).value;
 
 	thisNdef.play(fadeTime: 0.1);
 
@@ -44,12 +46,15 @@ Tdef( 'fv_hangOn' , { |ev|
 			var percbuf = q.brazil.wrapAt(i + (0.. 3.linrand));
 
 			var buf;
+
+			// compTdef, startedTime, intendedDur, projected next dur
+			MFdef(\adjustTime).value(thisTdef, time0, ev.chosenDur, dict.dur + 1);
+			MFdef(\sendInfo).value(dict.name, q.activeTdef.key);
+
 			q.readBufToDict(dict);
 			q.bufmem.addKey(dict.name);
 			buf = dict.buf;
-			buf.path.basename.postcs;
 
-			MFdef(\sendInfo).value(dict.name, q.activeTdef.key);
 
 			if(buf.notNil){
 

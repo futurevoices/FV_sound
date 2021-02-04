@@ -19,11 +19,13 @@ q[\blipfunc] = {|freq=150, numharm= 5, pan=0|
 
 (
 Tdef('fv_bumpy').quant_(0).stop.play;
+Tdef('fv_bumpy').set(\chosenDur, 120);
 
 Tdef('fv_bumpy', { |ev|
 	var mykey = 'fv_bumpy';
 	var thisTdef = Tdef(mykey);
 	var thisNdef = q.tdefPrepNdef(thisTdef);
+	var time0 = Main.elapsedTime;
 
 	"\n*** % starts ***\n\n".postf(thisTdef);
 	0.1.wait;
@@ -40,6 +42,10 @@ Tdef('fv_bumpy', { |ev|
 			var nums = Array.geom(numMax, 1, rrand(1.3, 2));
 			var maxFreq = exprand(1000, 2000);
 			var buf;
+
+			// compTdef, startedTime, intendedDur, projected next dur
+			MFdef(\adjustTime).value(thisTdef, time0, ev.chosenDur, dict.dur + 7);
+
 			q.readBufToDict(dict);
 			q.bufmem.addKey(dict.name);
 			buf = dict.buf;

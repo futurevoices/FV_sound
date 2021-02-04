@@ -8,12 +8,15 @@
 
 Tdef('fv_grainbow').set(\randSeed, nil);
 
+Tdef('fv_grainbow').set(\chosenDur, 120);
+
 Tdef('fv_grainbow').quant_(0).stop.play;
 
 Tdef('fv_grainbow', { |ev|
 	var mykey = 'fv_grainbow';
 	var thisTdef = Tdef(mykey);
 	var thisNdef = q.tdefPrepNdef(thisTdef);
+	var time0 = Main.elapsedTime;
 
 	0.1.wait;
 	"\n*** % starts ***\n\n".postf(thisTdef);
@@ -29,8 +32,14 @@ Tdef('fv_grainbow', { |ev|
 			var dur = dict.dur, buf;
 			var numvoices = exprand(3, 8).round;
 			var pitchvar = 0.1.linrand.round(0.001);
+
+			// compTdef, startedTime, intendedDur, projected next dur
+			MFdef(\adjustTime).value(thisTdef, time0, ev.chosenDur, dur);
+
 			q.readBufToDict(dict);
 			buf = dict.buf;
+
+
 			MFdef(\sendInfo).value(dict.name, q.activeTdef.key);
 			"- % n: % pvar: %\n".postf(dict.name, numvoices, pitchvar);
 
@@ -52,7 +61,7 @@ Tdef('fv_grainbow', { |ev|
 				};
 				grains = grains.mean * 6;
 				if (0.5.coin) { grains = grains.reverse };
-				grains
+				grains * Env([1, 1, 0 ], [buf.duration, 1]).kr(2);
 			});
 			(dur).wait;
 		};

@@ -27,6 +27,43 @@ MFdef(\dateSeed).add(\doit, {
 	q.seed
 });
 
+// let composTdefs adjust directors remainTime:
+// tdef projects how long next timestep would take;
+// if projected next time much longer that remainTime,
+// -> stop tdef and tell director tdef is over
+// -> if a little longer, extend director remainTime
+// -> if shorter, just keep going.
+
+/* // copy these into tdefs:
+// before tdef
+Tdef('fv_XXX').set(\chosenDur, 120);
+// first thing within tdef
+var time0 = Main.elapsedTime;
+
+// before loading next buffer to play:
+// compTdef, startedTime, plannedDur, projected next dur
+MFdef(\adjustTime).value(thisTdef, time0, ev.chosenDur, dict.dur);
+*/
+
+MFdef(\adjustTime).add(\stopOrExtend, { |compTdef, time0, plannedDur = 120, projectedDur|
+	// if remainder of chosenDur > thistime
+	var timeSoFar = Main.elapsedTime - time0;
+	var myRemainTime = plannedDur - timeSoFar;
+	case { myRemainTime < (projectedDur * 0.5) } {
+		"next event much longer than plannedDur,\n"
+		"so end and hand back early".postln;
+		Tdef(\director_FV).set(\remainTime, 0);
+		compTdef.postcs.stop;
+		0.01.wait;
+		// "what? not stopping yet???".postln;
+	} { myRemainTime < projectedDur } {
+		"next event a little over plannedDur,\n"
+		"extend director remainTime to: ".post;
+		Tdef(\director_FV).set(\remainTime, projectedDur.round(0.01).postln);
+	};
+});
+
+
 (
 Tdef(\director_FV).addSpec(\speedup, [1, 30, \exp]);
 Tdef(\director_FV).addSpec(\cycleMins, [3, 180, \lin, 1]);
@@ -39,14 +76,16 @@ Tdef(\director_FV).set(\closeSecs, 150);
 
 Tdef(\director_FV, { |ev|
 
-	q.composRecents = [];
+	var thisQuarter, lastQuarter = -1;
 
-	Tdef(\jingleDir).embed;
+	q.composRecents = [];
 
 	loop {
 		var cycleTimeSecs, cycleRemainSecs;
 		var remainTime, activeTdef;
 		var date, now, isClose, isAtZero;
+
+		Tdef(\jingleDir).embed;
 
 		// check for new entries in folder:
 		defer {
@@ -57,7 +96,13 @@ Tdef(\director_FV, { |ev|
 		// stop all previous tdefs & ndefs:
 		Tdef(\stopAll).stop.play(quant: 0);
 
-		2.wait;
+		1.wait;
+
+		thisQuarter = Date.getDate.minute div: 15;
+		if (thisQuarter != lastQuarter) {
+			Tdef(\jingleDir).embed;
+		};
+		lastQuarter = thisQuarter;
 
 		// choose & play one of the compos files:
 		// new compositions get added automatically!
@@ -83,6 +128,7 @@ Tdef(\director_FV, { |ev|
 
 		activeTdef = q.chosenFile.load; // load and play!
 		activeTdef.set(\randSeed, 10000.rand);
+		activeTdef.set(\chosenDur, q.chosenDur);
 		q.activeTdef = activeTdef;
 
 		// spec for remaining time remainTime
@@ -134,8 +180,8 @@ Tdef(\director_FV, { |ev|
 
 			q.chosenFile = "nonono";
 
-			// play jingle at full hour!
-			Tdef(\jingleDir).embed;
+			///// play jingle at full hour! plays higher up anyway:
+			// Tdef(\jingleDir).embed;
 		};
 
 		// then go back to top, and stopAll

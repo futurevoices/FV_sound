@@ -17,10 +17,14 @@ q.mood .density = 2.62;
 
 (instrument: \glisson, sustain: 0.1, freq: 2000, freq2: 3000).play
 */
+Tdef(\fv_converse).set(\chosenDur, 120);
 
 Tdef(\fv_converse).quant = 0;
+Tdef(\fv_converse).stop.play;
+
 Tdef(\fv_converse, { |ev|
 	var timeRange, allshortz, allshortz2, shortgroups, percs;
+	var time0 = Main.elapsedTime;
 
 	// same for all Tdefs (except name):
 	var mykey = 'fv_converse';
@@ -90,10 +94,15 @@ Tdef(\fv_converse, { |ev|
 			rrand(1, 2).do { |i|
 				// reverse repeats? - not working yet
 				var rate = [1, -1][i];
+				var waittime;
 				("converse rep:" + i).postln;
+
 
 				myshorts.scramble.do { |dict, j|
 					(dict.literal_text ?? dict.name.asString).keep(60).postcs;
+
+					// compTdef, startedTime, intendedDur, projected next dur
+					MFdef(\adjustTime).value(thisTdef, time0, ev.chosenDur, dict.dur);
 
 					(instrument: \simpsamp,
 						buf: dict.buf,
@@ -125,5 +134,5 @@ Tdef(\fv_converse, { |ev|
 		1.wait;
 		"\n\n<<< converse LOOPING >>>\n\n".postln;
 	}
-}).stop.play;
+});
 

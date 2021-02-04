@@ -3,11 +3,13 @@
 
 (
 Tdef('fv_stereoBattle').quant_(0).stop.play;
+Tdef('fv_stereoBattle').set(\chosenDur, 120);
 
 Tdef( 'fv_stereoBattle' , { |ev|
 	var mykey = 'fv_stereoBattle';
 	var thisTdef = Tdef(mykey);
 	var thisNdef = q.tdefPrepNdef(thisTdef);
+	var time0 = Main.elapsedTime;
 
 	0.1.wait;
 	q.tdefSeed(thisTdef);
@@ -24,6 +26,10 @@ Tdef( 'fv_stereoBattle' , { |ev|
 			var pan = (i%2*2-1) * rrand(0.85, 0.95);
 
 			var sample1;
+
+			// compTdef, startedTime, intendedDur, projected next dur
+			MFdef(\adjustTime).value(thisTdef, time0, ev.chosenDur, voiceDict.dur * stretch);
+
 			q.readBufToDict(voiceDict);
 			q.bufmem.addKey(voiceDict.name);
 

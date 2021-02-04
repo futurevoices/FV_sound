@@ -55,11 +55,13 @@ MFdef('fv_listo').add(\prep, {
 });
 
 (
-Tdef( 'fv_listo').quant_(0).stop.play;
-Tdef( 'fv_listo' , { |ev|
+Tdef('fv_listo').quant_(0).stop.play;
+Tdef('fv_listo').set(\chosenDur, 120);
+Tdef('fv_listo' , { |ev|
 	var mykey = 'fv_listo';
 	var thisTdef = Tdef(mykey);
 	var thisNdef = q.tdefPrepNdef(thisTdef);
+	var time0 = Main.elapsedTime;
 
 	var numPerc, percbuf, pans = #[-1,1]*0.9;
 
@@ -81,10 +83,13 @@ Tdef( 'fv_listo' , { |ev|
 		var mydict = q.bufmem.filterDict(q.mainDict);
 		mydict.asArray.scramble.do { |dict, i|
 			var buf;
+
+			// compTdef, startedTime, intendedDur, projected next dur
+			MFdef(\adjustTime).value(thisTdef, time0, ev.chosenDur, dict.dur);
+			MFdef(\sendInfo).value(dict.name, q.activeTdef.key);
+
 			q.readBufToDict(dict);
 			buf = dict.buf;
-
-			MFdef(\sendInfo).value(dict.name, q.activeTdef.key);
 
 			if (buf.notNil) {
 
