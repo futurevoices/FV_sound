@@ -29,17 +29,19 @@ q.readDictPath = "libs/a_readDict.scd".resolveRelative;
 
 /////// THESE ARE THE FOLDERS for the stream installation:
 //// contributions folder in its own auto-synced seafile folder
-q.yamlSearchPath = "~/Seafile/future_mirror/*.yaml".standardizePath;
+//// you can override these in the startup file:
+//// if these two paths already exist, they will be kept!
+q.yamlSearchPath = q.yamlSearchPath ? "~/Seafile/future_mirror/*.yaml".standardizePath;
 //// soundlibz folder in its own auto-synced seafile folder
-q.soundlibsPath = "~/Seafile/future_soundz/soundlibs/".standardizePath;
+q.soundlibsPath = q.soundlibsPath ? "~/Seafile/future_soundz/soundlibs/".standardizePath;
 
 // get PostLog:
 if (\PostLog.asClass.notNil) {
 	\PostLog.asClass.start;
 } {
-	"*** installing postlog - please recompile.".postln;
-	Quarks.fetchDirectory;
-	Quarks.install("postlog");
+	// "*** installing postlog - please recompile.".postln;
+	// Quarks.fetchDirectory;
+	// Quarks.install("postlog");
 };
 
 // ==========================================================
@@ -83,13 +85,13 @@ Task {
 	// give server lots of realtime Memory: 2 ** 21 is 2 GB, 2 ** 19 is 500MB
 	s.options.memSize = (2 ** 19).asInteger; // 500MB
 	s.options.numAudioBusChannels = 4096;
-	// priority: stability of stream more important thatn low latency
-	s.options.hardwareBufferSize = 4096;
-	s.options.sampleRate = 44100;
+	// priority: stability of stream more important than low latency
+	s.options.hardwareBufferSize = s.options.hardwareBufferSize ? 4096;
+	s.options.sampleRate = s.options.sampleRate ? 44100;
 	s.options.numBuffers = 2048; // default is 1024
 
 	// no inputs
-	s.options.numInputBusChannels = 0;
+	s.options.numInputBusChannels = 2;
 	s.options.numOutputBusChannels = 4;
 
 	q.usePlayAudio12 = ServerOptions.devices.any (_=="PlayAUDIO12");
@@ -99,6 +101,7 @@ Task {
 	/// to send control/alive failover audio signal
 	if (q.usePlayAudio12) {
 		s.options.device = "PlayAUDIO12";
+		s.options.numInputBusChannels = 0;
 		s.options.numOutputBusChannels = 14;
 	};
 
