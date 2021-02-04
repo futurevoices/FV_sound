@@ -9,19 +9,21 @@ http://crca.ucsd.edu/~msp/techniques/latest/book.pdf
 MFdef('fv_listo').add(\prep, {
 	// filter Ndef for all voices:
 	/////// was fv_catchAll
-	Ndef('fv_listo').ar(numChannels: 2);
-	Ndef('fv_listo').play;
-	try { s.sync };
-	Ndef('fv_listo')[5] = \filter -> {|in| HPF.ar(DelayN.ar(in, 0.2,  LFNoise0.ar(1/2).exprange(0.2, 1/200).lag(0.2, 0.5), 1, in), 40)  };
+	s.bind {
+		Ndef('fv_listo').ar(numChannels: 2);
+		Ndef('fv_listo').play;
+		try { s.sync };
+		Ndef('fv_listo')[5] = \filter -> {|in| HPF.ar(DelayN.ar(in, 0.2,  LFNoise0.ar(1/2).exprange(0.2, 1/200).lag(0.2, 0.5), 1, in), 40)  };
 
-	Ndef('fv_listo')[10] = \filter -> {|in| HPF.ar(CombL.ar(in, 0.1, LFNoise0.ar(1).exprange(1/100, 1/4000).lag(0.2, 0.5), 2, 0.2), 40)  };
+		Ndef('fv_listo')[10] = \filter -> {|in| HPF.ar(CombL.ar(in, 0.1, LFNoise0.ar(1).exprange(1/100, 1/4000).lag(0.2, 0.5), 2, 0.2), 40)  };
 
-	Ndef('fv_listo')[20] = \filter -> {|in| HPF.ar(AdCVerb.ar(in, 4, 0.6), 40, 0.1)  };
+		Ndef('fv_listo')[20] = \filter -> {|in| HPF.ar(AdCVerb.ar(in, 4, 0.6), 40, 0.1)  };
 
-	Ndef('fv_listo').set(\wet5, 0.75);
-	Ndef('fv_listo').set(\wet10, 0.05);
-	Ndef('fv_listo').set(\wet20, 0.075);
+		Ndef('fv_listo').set(\wet5, 0.75);
+		Ndef('fv_listo').set(\wet10, 0.05);
+		Ndef('fv_listo').set(\wet20, 0.075);
 
+	};
 	(
 		Ndef(\fv_companion, {
 			var in, ampTr, ampFollower, freq, hasFreq, sound, blipFr, mod, modFormant, modBW;
