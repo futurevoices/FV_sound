@@ -88,8 +88,8 @@ Tdef(\fv_converse, { |ev|
 				q.readBufToDict(dict);
 				q.bufmem.addKey(dict.name);
 			};
-
-			0.5.wait;
+			s.sync;
+			// 0.5.wait;
 
 			rrand(1, 2).do { |i|
 				// reverse repeats? - not working yet
