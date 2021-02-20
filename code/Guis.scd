@@ -1,4 +1,5 @@
-Butz.style.font_(Butz.style.font.size_(16));
+Butz.style.font_(Butz.style.font.size_(14));
+Butz.style.winLoc = 10 @ 50;
 
 Butz.add(\mini, { Butz.showButs(2); });
 Butz.add(\maxi, { Butz.showButs });
@@ -122,18 +123,18 @@ WinBounds.addMake(\FutureVoices, {
 });
 
 /*
-WinBounds.saveString
+Window.getAll.printcsAll;
 */
 
 WinBounds.stored.putAll( (
+	'Butz': Window.flipY(Rect(10, 10, 117.0, 460.0)),
 	'MainFX': Rect(694.0, 38.0, 524.0, 350.0),
 	'FutureVoices': Rect(403.0, 406.0, 400.0, 400.0),
-	'NdefMixer_mixer': Rect(100, 37.0, 684.0, 345.0),
-	'scope': Rect(5.0, 100, 263.0, 250.0),
+	'NdefMixer_mixer': Rect(150, 100, 684.0, 345.0),
 
-	'Butz': Rect(5.0, 545.0, 117.0, 460.0),
-	'meter': Rect(5.0, 300, 134.0, 230.0),
-	'TdefAll': Rect(126.0, 408.0, 274.0, 354.0)
+	'meter': Rect(10, 10, 134.0, 230.0),
+	'scope': Rect(150, 10, 263.0, 230.0),
+	'TdefAll': Rect(150, 408.0, 274.0, 354.0)
 ) );
 
 
