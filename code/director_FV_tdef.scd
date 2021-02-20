@@ -80,6 +80,13 @@ Tdef(\director_FV, { |ev|
 
 	q.composRecents = [];
 
+	if (q.usePlayAudio12) {
+		// play sine sig on ch 13 for playAudio 12 interface:
+		Ndef(\zz_PASign, { SinOsc.ar }).play(12, vol: 0.1);
+	};
+
+
+
 	loop {
 		var cycleTimeSecs, cycleRemainSecs;
 		var remainTime, activeTdef;
