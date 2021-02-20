@@ -172,14 +172,20 @@ SynthDef(\simpsamp, { |out, buf, amp=0.1, rate = 1, pan=0, start|
 		rate * BufRateScale.kr(buf), 1,
 		wrappedStart, doneAction: 2
 	);
+	// just to make sure
+	DetectSilence.ar(snd, doneAction: 2);
 	OffsetOut.ar(out, Pan2.ar(snd, pan, amp));
 }).add;
 
 /*** test:
-(instrument: \simpsamp, buf: q.bufLast, rate: 1).play;
-(instrument: \simpsamp, buf: q.bufLast, start: 4, rate: 1).play;
-(instrument: \simpsamp, buf: q.bufLast, rate: -1).play;
-(instrument: \simpsamp, buf: q.bufLast, start: 4, rate: -1).play;
+fork { x = q.readBufToDict(q.mainDict.detect(_.dur < 4)) };
+(instrument: \simpsamp, buf: x.buf, amp: 0.3, rate: 1).play;
+(instrument: \simpsamp, buf: x.buf, start: x.dur * 0.5, rate: 1).play;
+(instrument: \simpsamp, buf: x.buf, rate: -1).play;
+(instrument: \simpsamp, buf: x.buf, start: x.dur * 0.5, rate: -1).play;
+// should end immediately (0.1 sec)
+(instrument: \simpsamp, buf: x.buf, amp: 0.0, start: x.dur * 0.5, rate: -1).play;
+
 ***/
 
 (
@@ -203,6 +209,8 @@ SynthDef(\simpsampGlitch, { |out, buf, amp=0.1, rate = 1, pan=0, start|
 		start * BufSampleRate.ir(buf),
 		0, 2, doneAction:2
 	);
+	// just to make sure
+	DetectSilence.ar(snd, doneAction: 2);
 	OffsetOut.ar(out, Pan2.ar(snd, pan, amp));
 }).add;
 /*
@@ -227,6 +235,8 @@ SynthDef(\simpsamp_st, { |out, buf, amp=0.1, rate = 1, start|
 		start * BufSampleRate.ir(buf),
 		0, 2, doneAction:2
 	);
+	// just to make sure
+	DetectSilence.ar(snd, doneAction: 2);
 	OffsetOut.ar(out, snd * amp);
 }).add;
 
