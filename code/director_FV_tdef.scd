@@ -85,31 +85,33 @@ Tdef(\director_FV, { |ev|
 		Ndef(\zz_PASign, { SinOsc.ar }).play(12, vol: 0.1);
 	};
 
-
-
 	loop {
 		var cycleTimeSecs, cycleRemainSecs;
 		var remainTime, activeTdef;
 		var date, now, isClose, isAtZero;
 
-		Tdef(\jingleDir).embed;
-
 		// check for new entries in folder:
 		defer {
+			var t0 = Main.elapsedTime;
 			q.updateEntries;
 			q.lang.check;
+			"updated entries & langs in % secs.\n"
+			.postf((Main.elapsedTime - t0).round(0.001));
 		};
 
 		// stop all previous tdefs & ndefs:
 		Tdef(\stopAll).stop.play(quant: 0);
 
-		1.wait;
+		0.1.wait;
 
 		thisQuarter = Date.getDate.minute div: 15;
+		[\quarter, thisQuarter, \prev, lastQuarter].postln;
 		if (thisQuarter != lastQuarter) {
+			"jingling!".postln;
 			Tdef(\jingleDir).embed;
 		};
 		lastQuarter = thisQuarter;
+		[\quarter, thisQuarter, \prev, lastQuarter].postln;
 
 		// choose & play one of the compos files:
 		// new compositions get added automatically!
