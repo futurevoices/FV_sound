@@ -124,12 +124,13 @@ WinBounds.addMake(\FutureVoices, {
 
 /*
 Window.getAll.printcsAll;
+WinBounds.saveString;
 */
 
 WinBounds.stored.putAll( (
 	'Butz': Window.flipY(Rect(10, 10, 117.0, 460.0)),
 	'MainFX': Rect(694.0, 38.0, 524.0, 350.0),
-	'FutureVoices': Rect(403.0, 406.0, 400.0, 400.0),
+	'FutureVoices': Rect(403.0, 406.0, 400.0, 520),
 	'NdefMixer_mixer': Rect(150, 100, 684.0, 345.0),
 
 	'meter': Rect(10, 10, 134.0, 230.0),
