@@ -10,7 +10,6 @@ q.bufmem.addKey = { |mem, newkey|
 	// addfirst, drop oldest one if maxsize reached
 	mem.usedKeys = mem.usedKeys.addFirst(newkey);
 	if (mem.usedKeys.size > mem.maxMems) {
-		"pop".postln;
 		mem.usedKeys.pop;
 	};
 	mem.usedKeys;
