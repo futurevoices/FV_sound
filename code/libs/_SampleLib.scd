@@ -173,7 +173,7 @@ SynthDef(\simpsamp, { |out, buf, amp=0.1, rate = 1, pan=0, start|
 		wrappedStart, doneAction: 2
 	);
 	// just to make sure
-	DetectSilence.ar(snd, doneAction: 2);
+	DetectSilence.ar(snd, time: 2, doneAction: 2);
 	OffsetOut.ar(out, Pan2.ar(snd, pan, amp));
 }).add;
 
