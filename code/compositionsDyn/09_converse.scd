@@ -61,7 +61,7 @@ Tdef(\fv_converse, { |ev|
 		"groupsizes: ".post;
 		shortgroups.collect(_.size).postln;
 		shortgroups.do { |myshorts, j|
-			"shortz group % - % files\n".postf(j, myshorts.size);
+			"\n --- shortz group % - % files\n".postf(j, myshorts.size);
 			// myshorts.do { |entry| entry.literal_text.keep(80).postcs };
 
 			fork {
@@ -84,22 +84,24 @@ Tdef(\fv_converse, { |ev|
 				}
 			};
 
-			myshorts.do { |dict|
-				q.readBufToDict(dict);
-				q.bufmem.addKey(dict.name);
-			};
-			s.sync;
-			// 0.5.wait;
-
 			rrand(1, 2).do { |i|
 				// reverse repeats? - not working yet
 				var rate = [1, -1][i];
 				var waittime;
 				("converse rep:" + i).postln;
 
-
 				myshorts.scramble.do { |dict, j|
-					(dict.literal_text ?? dict.name.asString).keep(60).postcs;
+					var percpan;
+
+					// only load the first time, not again
+					// on reversed repeat
+					if (i == 0) {
+						q.readBufToDict(dict);
+						q.bufmem.addKey(dict.name);
+					} {
+						"reversed: ".post;
+						(dict.literal_text ?? dict.name.asString).keep(50).postcs;
+					};
 
 					// compTdef, startedTime, intendedDur, projected next dur
 					MFdef(\adjustTime).value(thisTdef, time0, ev.chosenDur, dict.dur);
@@ -113,18 +115,22 @@ Tdef(\fv_converse, { |ev|
 
 					(dict.buf.duration / (q.mood.density ? 1.25)).wait;
 
+					percpan = ((j + 1) / myshorts.size) * [-1, 1].wrapAt(j);
+
 					/// whistle
-					(instrument: \glisson, sustain: exprand(0.02, 0.2),
+					(instrument: \glisson,
+						sustain: exprand(0.02, 0.2),
 						freq: exprand(400, 4000), freq2: exprand(400, 4000),
-						pan: [-0.1, 0.1].wrapAt(j) * j,
+						pan: percpan.neg,
 						rate: rate,
 						out: ev.bus
 					).play;
 
 					// perc
-					(instrument: \simpsamp, buf: percs[j],
+					(instrument: \simpsamp,
+						buf: percs.wrapAt(j),
 						rate: rate,
-						amp: 0.3, pan: [-0.1, 0.1].wrapAt(j) * j,
+						amp: 0.26, pan: percpan,
 						out: ev.bus
 					).play;
 				}
