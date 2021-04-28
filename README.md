@@ -23,7 +23,7 @@ should answer:
 May need to [install](https://git-scm.com/) git for your platform.
 
 Paste this code into SC:
-```bash
+```
 Quarks.fetchDirectory
 // should find this url
 Quarks.findQuarkURL("adclib");
