@@ -1,4 +1,8 @@
 # FutureVoices
+This quark is the codebase for the installation "Future Voices / Zukunftsmusik" by the Society for Nontrivial Pursuits, created for ctm festival 2021, Kontinuum. 
+It generates a continuous live stream of voice contributions. 
+
+You can listen and contribute to it at: https://futurevoices.radio/
 
 ### Chapters
 
@@ -8,11 +12,6 @@
   * [Troubleshooting](#troubleshooting)
     + [ERROR: duplicate Class found: 'XYZ'](#error--duplicate-class-found---xyz-)
     + [MacOS: xattr com.apple.quarantine SuperCollider.app/](#macos--xattr-comapplequarantine-supercolliderapp-)
-
-This quark is the codebase for the installation "Future Voices / Zukunftsmusik" by the Society for Nontrivial Pursuits, created for ctm festival 2021, Kontinuum. 
-It generates a continuous live stream of voice contributions. 
-
-You can listen and contribute to it at: https://futurevoices.radio/
 
 ## Installery
 1. SC [download](https://supercollider.github.io/download)
