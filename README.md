@@ -51,3 +51,18 @@ Quarks.install("~/Seafile/Future_Voices/quarks_packaged");
 "~/Seafile/Future_Voices/code-work/_fullLoad.scd".openOS;
 
 ```
+
+## Troubleshooting
+
+### ERROR: duplicate Class found: 'XYZ'
+What probably happened: You also activated the `fallback` Quarks into SuperCollider which are not necessary if the get loaded from the root.
+
+Go to `Preferences` ->  `Interpreter` -> Remove the `.../Seafile/Future_Voices/...` from the list.
+
+### MacOS: xattr com.apple.quarantine SuperCollider.app/ 
+`q.codeDir = thisProcess.nowExecutingPath.dirname;`
+If this line is erroring on MacOS.
+
+Go to the terminal and run `xattr SuperCollider.app/`. If it returns `com.apple.quarantine`, then run `xattr -d SuperCollider.app/`. Then it should work.
+
+Make sure SuperCollider is also inside the Applications folder. Not in the SuperCollider Subfolder.
