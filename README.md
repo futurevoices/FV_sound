@@ -75,3 +75,10 @@ Go to the terminal and run `xattr SuperCollider.app/`. If it returns `com.apple.
 
 Make sure SuperCollider is also inside the Applications folder. Not in the SuperCollider Subfolder.
 
+### SampleRate is up to 16k or mismatching in general
+While using bluetooth headphones, SuperCollider might be having problems with mismatching sampling rates. To use your computers speakers run the following:
+
+`s.options.inDevice = "MacBook Pro Microphone";`
+`s.options.outDevice = "MacBook Pro Speakers";`
+
+The strings have to be replaced with your computers device names. Find them by running `ServerOptions.devices.cs`.
