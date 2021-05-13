@@ -53,11 +53,12 @@ Tdef( 'fv_pyramid' , { |ev|
 
 
 	/////// BODY OF this composition:
-	loop {
-		var num = ev.numEntries;
-		var myChoices = q.mainDict.values.scramble.keep(ev.numEntries)
+	inf.do {
+		/////// fixed here:
+		var numEntries = ev.numEntries min: q.mainDict.size;
+		var myChoices = q.mainDict.values.scramble.keep(numEntries)
 		.sort { |a,b| a.dur > b.dur };
-		var timecurve = (0 .. num - 1).normalize ** (2 ** ev.timeWarp);
+		var timecurve = (0 .. numEntries - 1).normalize ** (2 ** ev.timeWarp);
 		var times = (timecurve * myChoices[0].dur * ev.peakTime).round(0.01);
 		var waittimes = times.differentiate;
 		var endtimes = times.collect { |time, i|

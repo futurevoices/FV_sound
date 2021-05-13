@@ -79,7 +79,7 @@ Tdef('fv_listo' , { |ev|
 	Ndef('fv_listo').play;
 	Ndef(\fv_companion).play(vol: 0.2);
 
-	loop {
+	inf.do {
 		var mydict = q.bufmem.filterDict(q.mainDict);
 		mydict.asArray.scramble.do { |dict, i|
 			var buf;
