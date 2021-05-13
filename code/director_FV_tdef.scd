@@ -63,6 +63,31 @@ MFdef(\adjustTime).add(\stopOrExtend, { |compTdef, time0, plannedDur = 120, proj
 	};
 });
 
+Tdef(\hourClock, {
+	var bufs =  [q.hang, q.brazil].collect(_.choose);
+	var dur = bufs.collect(_.duration).product ** (1/bufs.size);
+	var pitches = [4, 0, 2, -5, -5, 2, 4, 0];
+	var durs = [1, 1, 1, 3, 1, 1, 1, 3] * (dur * 0.5).clip(0.38, 1.62);
+
+	"\n*** hourClock:".postln;
+	bufs.do { |buf|
+		(buf.path.basename + buf.duration.round(0.01)).postln;
+	};
+	"dur: %\n".postf(dur);
+
+	pitches.do { |pitch, i|
+		bufs.do { |buf|
+			(
+				instrument: \simpsamp,
+				buf: bufs,
+				rate: pitch.midiratio * [0.99, 1.01].scramble,
+				amp: 0.5,
+				pan: [-1, 1]
+			).play;
+		};
+		durs[i].wait;
+	};
+}).quant_(0);
 
 (
 Tdef(\director_FV).addSpec(\speedup, [1, 30, \exp]);
