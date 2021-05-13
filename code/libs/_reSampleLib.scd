@@ -1,4 +1,18 @@
-// some new synthDefs that re-synthesize the Buffer. May/June 2020
+// some synthDefs that re-synthesize the Buffer. May/June 2020
+/*
+// prepare a testEntry, so you can listen to the synthdef examples in this file:
+
+q.testEntry = q.mainDict.choose;
+fork { q.readBufToDict(q.testEntry) };
+
+// just play the buffer
+q.testEntry.buf.play;
+
+// test with an event w synthdef name as instrument:
+(instrument: \simpsamp, amp: 0.5, buf: q.testEntry.buf).play;
+
+*/
+
 (
 // synthdef: resynth a buffer player with sines
 SynthDef(\singSamp, { |out, buf, amp=0.1, rate = 1, pan=0, start, xpose1=0.625, xpose2=3|
@@ -15,7 +29,7 @@ SynthDef(\singSamp, { |out, buf, amp=0.1, rate = 1, pan=0, start, xpose1=0.625, 
 	OffsetOut.ar(out, Pan2.ar(sound, pan, amp));
 }).add;
 /*
-(instrument: \singSamp, buf: q.patienceDict.values[11].buf , amp: 0.8).play;
+(instrument: \singSamp, buf: q.testEntry.buf, amp: 0.8).play;
 */
 SynthDef(\singSampRing, { |out, buf, amp=0.1, rate = 1, pan=0, start, xpose1=0.625, xpose2=2|
 	var in, ampTr, freq, hasFreq, sound;
@@ -31,7 +45,7 @@ SynthDef(\singSampRing, { |out, buf, amp=0.1, rate = 1, pan=0, start, xpose1=0.6
 	OffsetOut.ar(out, Pan2.ar(sound*in, pan, amp));
 }).add;
 /*
-(instrument: \singSampRing, buf: q.patienceDict.values[11].buf , amp: 0.8).play;
+(instrument: \singSampRing, buf: q.testEntry.buf, amp: 0.8).play;
 */
 
 
@@ -53,9 +67,9 @@ SynthDef(\singSampComb, { |out, buf, amp=0.1, rate = 1, pan=0, start, xpose1=0.6
 	OffsetOut.ar(out, Pan2.ar(sound, pan, amp * env));
 }).add;
 /*
-(instrument: \singSampComb, buf: q.patienceDict.values[11].buf , amp: 0.8).play;
+(instrument: \singSampComb, buf: q.testEntry.buf, amp: 0.8).play;
 
-(instrument: \singSampComb, buf: q.patienceDict.values[11].buf, rate:0.25, dcy: 10, xpose1: 4, amp: 0.8).play;
+(instrument: \singSampComb, buf: q.testEntry.buf, rate:0.25, dcy: 10, xpose1: 4, amp: 0.8).play;
 */
 
 
@@ -77,8 +91,8 @@ SynthDef(\singSampRinger, { |out, buf, amp=0.1, rate = 1, pan=0, start, xpose1=0
 	OffsetOut.ar(out, Pan2.ar(sound, pan, amp * env));
 }).add;
 /*
-(instrument: \singSampRinger, buf: q.patienceDict.values[11].buf, amp: 0.8).play;
-(instrument: \singSampRinger, buf: q.patienceDict.values[11].buf, rate: 0.25, amp: 0.8).play;
+(instrument: \singSampRinger, buf: q.testEntry.buf, amp: 0.8).play;
+(instrument: \singSampRinger, buf: q.testEntry.buf, rate: 0.25, amp: 0.8).play;
 */
 
 
@@ -101,7 +115,7 @@ SynthDef(\singSampBlip, { |out, buf, amp=0.1, rate = 1, pan=0, start|
 	OffsetOut.ar(out, Pan2.ar(sound, pan, amp * env));
 }).add;
 /*
-(instrument: \singSampBlip, buf: q.patienceDict.values[11].buf , amp: 0.8).play;
+(instrument: \singSampBlip, buf: q.testEntry.buf , amp: 0.8).play;
 */
 
 
@@ -136,6 +150,10 @@ SynthDef(\singSampRingerSinger, { |out, buf, amp=0.1, rate = 1, start, xpose1=2,
 
 	OffsetOut.ar(out, sound * (amp * env));
 }).add;
+/*
+(instrument: \singSampRingerSinger, buf: q.testEntry.buf , amp: 0.8).play;
+(instrument: \singSampRingerSinger, buf: q.testEntry.buf, rate: 0.25, amp: 0.8).play;
+*/
 
 
 
@@ -144,10 +162,6 @@ SynthDef(\singSampRingerSinger, { |out, buf, amp=0.1, rate = 1, start, xpose1=2,
 // cavarero variants
 ///////////////////////////////////////////////////////
 
-/*
-(instrument: \singSampRingerSinger, buf: q.patienceDict.values[11.rand].buf, amp: 0.8).play;
-(instrument: \singSampRingerSinger, buf: q.patienceDict.values[11].buf, rate: 0.25, amp: 0.8).play;
-*/
 SynthDef(\singSampCavaChord, { |out, buf, amp=0.1, rate = 1, start,  wet = 0.50,
 	locut=1000, pole=0.6, strDecay=1, strSlope=0.8, delayfan=1|
 	var str, filtSrc, notes, freqs, ampComps;
@@ -177,9 +191,9 @@ SynthDef(\singSampCavaChord, { |out, buf, amp=0.1, rate = 1, start,  wet = 0.50,
 }).add;
 
 /*
-(instrument: \singSampCavaChord, buf: q.patienceDict.values[21.rand].buf, amp: 0.8).play;
+(instrument: \singSampCavaChord, buf: q.testEntry.buf, amp: 0.8).play;
 
-(instrument: \singSampCavaChord, rate: 1/4, buf: q.patienceDict.values[21.rand].buf, amp: 0.8, wet: 0.9, strDecay: 15, strSlope:0.9, notes: [{rrand(50, 90)}.dup(6)] ).play;
+(instrument: \singSampCavaChord, rate: 1/4, buf: q.testEntry.buf, amp: 0.8, wet: 0.9, strDecay: 15, strSlope:0.9, notes: [{rrand(50, 90)}.dup(6)] ).play;
 */
 
 SynthDef(\singSampCavaChord2, { |out, buf, amp=0.1, rate = 1, start,  wet = 0.50,
@@ -220,11 +234,11 @@ SynthDef(\singSampCavaChord2, { |out, buf, amp=0.1, rate = 1, start,  wet = 0.50
 }).add;
 
 /*
-(instrument: \singSampCavaChord2, buf: q.patienceDict.values[21.rand].buf, amp: 0.8).play;
+(instrument: \singSampCavaChord2, buf: q.testEntry.buf, amp: 0.8).play;
 
-(instrument: \singSampCavaChord2, buf: q.patienceDict.values[21.rand].buf, amp: 2.98, wet: 0.8, strDecay: 15, strSlope:0.9 ).play;
+(instrument: \singSampCavaChord2, buf: q.testEntry.buf, amp: 2.98, wet: 0.8, strDecay: 15, strSlope:0.9 ).play;
 
-(instrument: \singSampCavaChord2, buf: q.patienceDict.values[21.rand].buf, amp: 2.98, wet: 0.8, strDecay: 150, rate: 0.5 ).play; // lower pitch
+(instrument: \singSampCavaChord2, buf: q.testEntry.buf, amp: 2.98, wet: 0.8, strDecay: 150, rate: 0.5 ).play; // lower pitch
 
 */
 
@@ -269,9 +283,9 @@ SynthDef(\singSampCavaChord3, { |out, buf, amp=0.1, rate = 1, start,  wet = 0.50
 }).add;
 
 /*
-(instrument: \singSampCavaChord3, buf: q.patienceDict.values[21.rand].buf, amp: 0.8).play;
+(instrument: \singSampCavaChord3, buf: q.testEntry.buf, amp: 0.8).play;
 
-(instrument: \singSampCavaChord3, buf: q.patienceDict.values[21.rand].buf, amp: 2.98, wet: 0.8, strDecay: 3, strSlope:0.9, rate: 1/9, thresh: 0.125 ).play;
+(instrument: \singSampCavaChord3, buf: q.testEntry.buf, amp: 2.98, wet: 0.8, strDecay: 3, strSlope:0.9, rate: 1/9, thresh: 0.125 ).play;
 
 */
 
@@ -317,9 +331,9 @@ SynthDef(\singSampCavaForm, { |out, buf, amp=0.1, rate = 1, start,  wet = 0.50, 
 }).add;
 
 /*
-(instrument: \singSampCavaForm, buf: q.patienceDict.values[21.rand].buf, amp: 0.8).play;
+(instrument: \singSampCavaForm, buf: q.testEntry.buf, amp: 0.8).play;
 
-(instrument: \singSampCavaForm, buf: q.patienceDict.values[21.rand].buf, amp: 2.98, wet: 0.5, strDecay: 3, strSlope:0.9, rate: 1, thresh: 0.25 ).play;
+(instrument: \singSampCavaForm, buf: q.testEntry.buf, amp: 2.98, wet: 0.5, strDecay: 3, strSlope:0.9, rate: 1, thresh: 0.25 ).play;
 
 */
 
@@ -334,7 +348,7 @@ SynthDef(\rampy, { |out=0, amp=0.5, pan=0, buf=0, rate=1, rateEnd=2|
 	Out.ar(out, Pan2.ar(snd, pan, amp));
 }).add;
 /*
-(instrument: \rampy).play;
+(instrument: \rampy, buf: q.testEntry.buf).play;
 (instrument: \rampy, rateEnd: 1).play;
 (instrument: \rampy, rateEnd: 16).play;
 (instrument: \rampy, rateEnd: 0.5).play;
