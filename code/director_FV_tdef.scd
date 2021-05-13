@@ -227,11 +227,10 @@ Tdef(\director_FV, { |ev|
 			MFdef(\dateSeed).value;
 			thisThread.randSeed_(q.seed);
 			"*** postseed check: %\n".postf(100.rand);
-			// clear chosenfile so it wont be removed from choices
-			// this is to allow syncing across machines!
-			// "play a little hang/brazil flourish here?";
 
-			q.chosenFile = "nonono";
+			// clear composRecents so we can sync across machines!
+			// also clear bufmem recents? ...
+			q.composRecents = [];
 
 			///// play jingle at full hour! plays higher up anyway:
 			// Tdef(\jingleDir).embed;
