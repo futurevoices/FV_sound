@@ -62,13 +62,14 @@ q.emptyStringsToNils = {|q, event|
 
 // turn any numerical values into numbers (int or float)
 q.numerifyVals = {|q, event|
+	var val;
 	if(event.isKindOf(Event).not){ "please provide an Event as input arg".warn}{
 		event.keysValuesDo{|k, v|
 
 			// special case for new age ranges!
 			if( k == \age and: {v.asString.contains(" - ")})
 			{
-				var val = v.split($-).first.interpret + 9.rand; // some random spread
+				val = v.split($-).first.interpret + 9.rand; // some random spread
 				event.put(k, val)
 			};
 
@@ -83,11 +84,12 @@ q.numerifyVals = {|q, event|
 
 // requires q.voiceDict  to be loaded
 q.addBuffer = {|q, event|
+	var bufKey, buf;
 	if(q.voiceDict.isNil){"voiceDict not loaded!!".warn;}{
 		if(event.isKindOf(Event).not){ "please provide an Event as input arg".warn; }{
 			// var key =    d.filename.split($.).first.toLower.asSymbol;
-			var bufKey = event.name; // PathName(d.filename).fileNameWithoutExtension.toLower.asSymbol;
-			var buf = q.voiceDict.at(bufKey);
+			bufKey = event.name;
+			buf = q.voiceDict.at(bufKey);
 			if(buf.notNil and: { buf.sampleRate.notNil } ){
 				event.put(\buf, buf);
 				event.put(\dur, buf.duration);
@@ -96,27 +98,6 @@ q.addBuffer = {|q, event|
 		}
 	}
 };
-
-/////////// ORIG:
-////// func to harvest 1 yaml
-// q.readYaml = {|ev, path|
-//
-// 	var filename = PathName(path).fileNameWithoutExtension;
-// 	var defaultPath = q.bufPath +/+ "_template.yaml";
-// 	var individualPath = q.bufPath +/+ filename ++ ".yaml";
-// 	var defaulz, myPath = if(individualPath.postcln.pathMatch.notEmpty)
-// 	{defaulz=false; individualPath}
-// 	{defaulz=true; defaultPath};
-//
-// 	var id = myPath.standardizePath.parseYAMLFile;
-// 	d = q.dictToEvent(id, () );
-// 	d.put(\name, filename.toLower.asSymbol);
-// 	d.put(\filename, filename.toLower.asSymbol);
-// 	d = q.emptyStringsToNils(d);
-// 	d = q.numerifyVals(d);
-// 	d = q.addBuffer(d);      // find Buffer previously loaded
-// 	d
-// };
 
 //////// TRY FIX: FAILED YAML complains, but continues
 //////// return either a valid dict, or nil
