@@ -15,10 +15,20 @@ q.bufmem.addKey = { |mem, newkey|
 	mem.usedKeys;
 };
 
+
+////// safe new method - always keep some choices!
 // remove all recent buffers from a dict of dicts
+// when dict is small, only remove latest 75%
 q.bufmem.filterDict = { |bufmem, dict|
-	dict.select { |value, key| q.bufmem.usedKeys.includes(key).not };
+	var maxmems = (dict.size * 0.75).asInteger min: (dict.size - 2);
+	var usedKeysShort = q.bufmem.usedKeys.keep(maxmems);
+	dict.select { |value, key| usedKeysShort.includes(key).not };
 };
+
+// // remove all recent 40 or so buffers from a dict of dicts
+// q.bufmem.filterDict = { |bufmem, dict|
+// 	dict.select { |value, key| q.bufmem.usedKeys.includes(key).not };
+// };
 // all collections
 q.bufmem.filter = { |bufmem, coll|
 	coll.select { |elem, key| q.bufmem.usedKeys.includes(elem.name) };
