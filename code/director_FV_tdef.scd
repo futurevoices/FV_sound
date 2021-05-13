@@ -137,6 +137,12 @@ Tdef(\director_FV, { |ev|
 		thisQuarter = Date.getDate.minute div: 15;
 		[\quarter, thisQuarter, \prev, lastQuarter].postln;
 		if (thisQuarter != lastQuarter) {
+			if (thisQuarter == 0) {
+				2.wait;
+				// play a little hang/brazil bigBen flourish here?;
+				Tdef(\hourClock).embed;
+			};
+
 			"jingling!".postln;
 			Tdef(\jingleDir).embed;
 		};
@@ -217,6 +223,7 @@ Tdef(\director_FV, { |ev|
 
 		if (isAtZero) {
 			"*** FULL HOUR ***".postln;
+			1.wait; // jump over exact full hour, so we get
 			MFdef(\dateSeed).value;
 			thisThread.randSeed_(q.seed);
 			"*** postseed check: %\n".postf(100.rand);
