@@ -66,14 +66,18 @@ MFdef('brazil').add(\prep, {
 	if(q.brazil.isNil){
 		forkIfNeeded {
 			q.brazil = q.loadSamples(q.soundlibsPath +/+ "_BRAZILPERC");
+			s.sync;
+			"_BRAZILPERC loaded.".postln;
 		}
 	};
-
 });
+
 MFdef('hang').add(\prep, {
 	if(q.hang.isNil){
 		forkIfNeeded {
 			q.hang = q.loadSamples(q.soundlibsPath +/+ "_Hang"); //
+			s.sync;
+			"_Hang loaded.".postln;
 		}
 	};
 });
