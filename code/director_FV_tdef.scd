@@ -110,7 +110,8 @@ Tdef(\director_FV, { |ev|
 		Ndef(\zz_PASign, { SinOsc.ar }).play(12, vol: 0.1);
 	};
 
-	loop {
+	inf.do {
+		// internals
 		var cycleTimeSecs, cycleRemainSecs;
 		var remainTime, activeTdef;
 		var date, now, isClose, isAtZero;
@@ -119,6 +120,10 @@ Tdef(\director_FV, { |ev|
 		defer {
 			var t0 = Main.elapsedTime;
 			q.updateEntries;
+			/**** FOR TAKEOVERS ****/
+			// filter mainDict to focus on smaller thematic subset of mainDict
+			q.filterMain;
+			"*** q.mainDict filtered to % entries.\n".postf(q.mainDict.size);
 			q.lang.check;
 			"updated entries & langs in % secs.\n"
 			.postf((Main.elapsedTime - t0).round(0.001));
@@ -142,12 +147,19 @@ Tdef(\director_FV, { |ev|
 		// new compositions get added automatically!
 		q.composChoices = q.composPath.pathMatch;
 
+		/**** FOR TAKEOVERS ****/
+		// reduce composChoices by  filtering:
+		q.filterCompos;
+
 		// // remove last played path - no immediate repeat
 		// // could keep several recent ones to avoid repeating them soon
 		// q.composChoices = q.composChoices.removeAllSuchThat { |path| path != q.chosenFile };
 
 		///// remove last 4 played paths from choices:
-		q.composChoices = q.composChoices.reject { |path| q.composRecents.includesEqual(path) };
+		q.composChoices = q.composChoices.reject { |path|
+			var numRecents = q.composChoices.size div: 2;
+			q.composRecents.keep(numRecents).includesEqual(path)
+		};
 		// choose one of them
 		q.chosenFile = q.composChoices.choose;
 
