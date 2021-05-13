@@ -2,6 +2,8 @@
 
 - This file loads the full setup for the FutureVoices installation,
 - and starts the piece immediately.
+- Select ALL CODE (Ctl-a / Cmd-a) and execute it (Shift-Enter)
+
 
 *** Structure:
 - Tdef director_FV finds all available episode compositions in subdir compositionsDyn.
@@ -34,6 +36,17 @@ q.readDictPath = "libs/a_readDict.scd".resolveRelative;
 q.yamlSearchPath = q.yamlSearchPath ? "~/Seafile/future_mirror/*.yaml".standardizePath;
 //// soundlibz folder in its own auto-synced seafile folder
 q.soundlibsPath = q.soundlibsPath ? "~/Seafile/future_soundz/soundlibs/".standardizePath;
+//// extra files for takeovers are here:
+q.takeoverPath = q.takeoverPath ? "~/Seafile/future_takeover/".standardizePath;
+
+
+/// special path fix for Andres/windows!s
+if ("C:/Users/CA/".pathMatch.notEmpty) {
+	//soundlibs path for andres ONLY:
+	q.yamlSearchPath = "C:/Users/CA/Seafile/future_mirror/*.yaml".standardizePath;
+	q.soundlibsPath = "C:/Users/CA/Seafile/future_soundz/soundlibs/";
+	q.takeoverPath = "C:/Users/CA/Seafile/future_takeovers/";
+};
 
 // get PostLog:
 if (\PostLog.asClass.notNil) {
@@ -85,13 +98,13 @@ Task {
 	// give server lots of realtime Memory: 2 ** 21 is 2 GB, 2 ** 19 is 500MB
 	s.options.memSize = (2 ** 19).asInteger; // 500MB
 	s.options.numAudioBusChannels = 4096;
-	// priority: stability of stream more important than low latency
-	s.options.hardwareBufferSize = s.options.hardwareBufferSize ? 4096;
-	s.options.sampleRate = s.options.sampleRate ? 44100;
+	// priority: stability of stream more important thatn low latency
+	s.options.hardwareBufferSize = 4096;
+	s.options.sampleRate = 44100;
 	s.options.numBuffers = 2048; // default is 1024
 
 	// no inputs
-	s.options.numInputBusChannels = 2;
+	s.options.numInputBusChannels = 0;
 	s.options.numOutputBusChannels = 4;
 
 	q.usePlayAudio12 = ServerOptions.devices.any (_=="PlayAUDIO12");
@@ -101,7 +114,6 @@ Task {
 	/// to send control/alive failover audio signal
 	if (q.usePlayAudio12) {
 		s.options.device = "PlayAUDIO12";
-		s.options.numInputBusChannels = 0;
 		s.options.numOutputBusChannels = 14;
 	};
 
@@ -111,7 +123,6 @@ Task {
 	s.waitForBoot {
 
 		0.5.wait;
-		// MainFX(s).clear;
 		"MainFX.scd".loadRelative;
 
 		// remove for headless deploy
@@ -119,7 +130,7 @@ Task {
 			defer ({ (q.codeDir +/+ "Guis.scd").load }, 0.2);
 		};
 
-		////// preload sample banks
+		////// preload 3 sample banks
 		MFdef('brazil').value;
 		MFdef('hang').value;
 		MFdef('jinglers').value;
