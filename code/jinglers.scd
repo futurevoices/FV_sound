@@ -69,7 +69,7 @@ Tdef(\algomelPoly, { |ev|
 	var data, numNotes, tempoScale, maxVoices=5, numVoices;// = exprand(1.6, maxVoices+0.5).round.asInteger;
 	numVoices = ev.numVoices.asInteger;
 	// score generation
-	"*** algo jingle hang melo playing % voices on seed %\n".postf(numVoices, ev.seed);
+	// "*** algo jingle hang melo playing % voices on seed %\n".postf(numVoices, ev.seed);
 	thisThread.randSeed = ev.seed;
 	numNotes = rrand(12, 20);
 	tempoScale = rrand(0.4, 0.66); // small value > faster
@@ -83,7 +83,7 @@ Tdef(\algomelPoly, { |ev|
 		rhythm = { |i| [0.7, 0.3, 0.4, 0.2, 0.7, 0.1, 0.3, 0.6].wrapAt(i).coin }.dup(numNotes);
 		[melo, rhythm, hangNr];
 	}.wrapExtend(numVoices);
-	data.shape.postln;
+	// data.shape.postln;
 
 	// score pb
 	numNotes.do{ |i|
