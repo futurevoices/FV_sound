@@ -1,24 +1,34 @@
+/*
+Butz.clear;
+*/
 Butz.style.font_(Butz.style.font.size_(14));
 Butz.style.winLoc = 10 @ 50;
 
 Butz.add(\mini, { Butz.showButs(2); });
 Butz.add(\maxi, { Butz.showButs });
 Butz.add(\SHOWALL, {
-	[ 'TdefAll', 'FutureVoices', 'mixer', 'MainFX', 'scope', 'meter' ].do { |name|
+	[ 'TdefAll', 'FutureVoices', 'mixer', 'MainFX', \MainVol, 'scope', 'meter' ].do { |name|
 		Butz.run(name)
 	}
 });
 
-Butz.add(\TdefAll, { WinBounds.showOrMake(\TdefAll) });
 Butz.add(\FutureVoices, { WinBounds.showOrMake(\FutureVoices) });
+Butz.add(\MainVol, { WinBounds.showOrMake(\Volume) });
+Butz.add(\TdefAll, { WinBounds.showOrMake(\TdefAll) });
 Butz.add(\mixer,   { WinBounds.showOrMake(\mixer) });
 Butz.add(\MainFX,  { WinBounds.showOrMake(\MainFX) });
 Butz.add(\scope,   { WinBounds.showOrMake(\scope) });
 Butz.add(\meter,   { WinBounds.showOrMake(\meter) });
 
+
 WinBounds.addMake(\TdefAll, { TdefAllGui.new(16).parent.name_(\TdefAll) });
 WinBounds.addMake(\scope, { s.scope.window.name_(\scope) });
 WinBounds.addMake(\meter, { s.meter.window.name_(\meter) });
+
+WinBounds.addMake(\Volume, {
+	VolumeGui(s.volume, nil, Rect(150.0, 600.0, 80.0, 330.0)).window;
+});
+
 
 WinBounds.addMake(\MainFX, {
 	var paramgui;
@@ -42,10 +52,13 @@ Butz.add(\closeAll, {
 		Butz.show.updateButtons;
 		Butz.w.layout.margins = [2, 2, 2, 2];
 		Butz.w.layout.spacing_(4);
+		Butz.showButs;
 	}, 0.1);
 });
 
-Butz.add(\updateCode, {
+Butz.add(\openFuVoDir, { q.codeDir.openOS });
+
+Butz.add(\updateFuVo, {
 	defer { Quarks.at("futurevoices").update }
 });
 
@@ -53,9 +66,8 @@ Butz.add(\updateQuarks, {
 	defer { Quarks.installed.do(_.update) }
 });
 
-Butz.add(\openCodeDir, { q.codeDir.openOS });
 
-Butz.add(\chooseStartup, { StartupFile.dialog });
+Butz.add(\StartupFile, { StartupFile.dialog });
 
 
 Butz.add(\RESTART, {
@@ -68,12 +80,12 @@ Butz.add(\RESTART, {
 	}, AppClock);
 });
 
-
 Task {
 	0.1.wait;
 	Butz.run(\closeAll);
 	0.1.wait;
 	Butz.run(\meter);
+	Butz.run(\scope);
 }.play(AppClock);
 
 WinBounds.addMake(\mixer, {
@@ -85,13 +97,18 @@ WinBounds.addMake(\mixer, {
 });
 
 WinBounds.addMake(\FutureVoices, {
+
 	q.tdefwin = Window(\FutureVoices).front.moveTo(300, Window.availableBounds.height - 100);
 	q.tdefwin.addFlowLayout;
 	q.statusView = StaticText(q.tdefwin, 400@40)
 	.string_(" ... ").align_(\center)
 	.font_(Font.default.copy.size_(16));
-	TdefGui(Tdef(\director_FV), 5, q.tdefwin, 380@120);
-	TdefGui(Tdef(\testAll), 4, q.tdefwin, 380@50);
+
+	q.dirGui = TdefGui(Tdef(\director_FV), 5, q.tdefwin, 380@120);
+	q.dirGui.nameBut.states_([[ "DIRECTOR", Color.white, Color.blue ]]);
+	q.dirGui.nameBut.font_(Font.default.copy.size_(16));
+
+
 	q.autobut = Button(q.tdefwin, 90@30).states_([["Auto"], ["Manual"]]);
 
 	q.tdpop = EZPopUpMenu(q.tdefwin, 280@30, \tdef2show, [\none, \yet], { |pop|
@@ -99,6 +116,7 @@ WinBounds.addMake(\FutureVoices, {
 	});
 
 	q.tdefgui = TdefGui(nil, 10, q.tdefwin, 380@200);
+	q.tdefgui.nameBut.font_(Font.default.copy.size_(16));
 
 	q.tdefguiskip.stop;
 	q.tdefguiskip = SkipJack({
@@ -118,6 +136,9 @@ WinBounds.addMake(\FutureVoices, {
 			};
 		}
 	}, 1, { q.tdefwin.isClosed });
+
+
+	TdefGui(Tdef(\testAll), 4, q.tdefwin, 380@50);
 
 	q.tdefwin;
 });
