@@ -709,10 +709,17 @@ SynthDescLib.global.synthDescs.keysValuesDo { |key, desc|
 	q.paramNames.put(key, dict);
 };
 
+q.fullDefs = q.paramNames.select{|sd| sd.keys.includesAll(['amp', 'freq', 'sustain', 'pan']); };
+
 q.tonalDefs = q.paramNames.select{|v| v.keys.includes(\freq) }.keys(SortedList);
 
 // q.synthDefs.printcsAll;
 
 postf("\n*** SynthDef Library loaded with % Synths *** access them with \nq.synthDefs;\n\n", q.synthDefs.size);
 postf("\n*** % SynthDefs have a freq input: *** access them with \nq.tonalDefs;\n\n", q.tonalDefs.size);
+postf("\n*** SynthDefs with full param set: % \n*** access them with: q.fullDefs;\n\n", q.fullDefs.size);
+
+"
+q.fullDefs.size;
+
 '';
