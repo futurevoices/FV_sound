@@ -7,6 +7,7 @@
 // load buffers, load data,
 // make Ndefs that play background sounds etc etc
 
+
 MFdef('fv_example').add(\prep, {
 	// PREP: make sure perc and brazil are there:
 	// load brazil samples if not there
@@ -14,6 +15,8 @@ MFdef('fv_example').add(\prep, {
 	// load hang samples if not there
 	MFdef(\hang).value;
 });
+
+
 
 ///// this is the Tdef that plays
 (
@@ -53,7 +56,8 @@ Tdef( 'fv_example' , { |ev|
 	//////// which other sounds to go along?
 	//////// loop to run forever (potentially)
 	////////
-	loop {
+	inf.do { |count|
+
 		// choose my selection of entries:
 		// could be selected from full database,
 		// by mood, topic/keyword/tag/language ...
