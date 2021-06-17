@@ -68,7 +68,12 @@ Tdef( 'fv_pyramid' , { |ev|
 		var introbuf = q.brazil.choose;
 
 		//
-		(instrument: \simpsamp, amp: 0.4, buf: introbuf, rate: [-1, 1], pan: [-1, 1].scramble).play;
+		(instrument: \simpsamp, amp: 0.4,
+			buf: introbuf,
+			rate: [-1, 1],
+			pan: [-1, 1].scramble,
+			out: ev.bus.index
+		).play;
 		introbuf.duration.wait;
 
 		// compTdef, startedTime, intendedDur, projected next dur
@@ -85,7 +90,9 @@ Tdef( 'fv_pyramid' , { |ev|
 			fork ({
 				0.5.wait;
 				(instrument: \simpsamp, buf: entry.buf,
-					amp: 0.3, pan: 1.0.rand2).play;
+					amp: 0.3, pan: 1.0.rand2,
+					out: ev.bus.index
+				).play;
 			});
 			time.wait;
 		};
