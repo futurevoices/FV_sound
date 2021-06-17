@@ -23,7 +23,7 @@ Tdef(\fv_converse).quant = 0;
 Tdef(\fv_converse).stop.play;
 
 Tdef(\fv_converse, { |ev|
-	var timeRange, allshortz, allshortz2, shortgroups, percs;
+	var allTimes, timeRange, allshortz, allshortz2, shortgroups, percs;
 	var time0 = Main.elapsedTime;
 
 	// same for all Tdefs (except name):
@@ -39,9 +39,13 @@ Tdef(\fv_converse, { |ev|
 	0.1.wait;
 	thisNdef.play(fadeTime: 0.1);
 
-	loop {
+	allTimes = q.mainDict.collectAs(_.dur, SortedList);
 
-		timeRange = (exprand(2.0, 20) * [1, 1.5]).round(0.01);
+	"dur min: % med: % max: %\n".postf(allTimes[0], allTimes[allTimes.size div: 2], allTimes.last);
+
+	inf.do {
+
+		timeRange = (exprand(1.0, 10) * allTimes.minItem * [1, 1.5]).round(0.01);
 
 		allshortz = q.mainDict.select ({ |dict|
 			dict.dur.inclusivelyBetween(*timeRange) });
@@ -58,6 +62,7 @@ Tdef(\fv_converse, { |ev|
 		);
 
 		shortgroups = allshortz.asArray.scramble.curdle(0.15);
+		shortgroups = shortgroups.select { |gr| gr.size > 0 };
 		"groupsizes: ".post;
 		shortgroups.collect(_.size).postln;
 		shortgroups.do { |myshorts, j|
@@ -123,9 +128,11 @@ Tdef(\fv_converse, { |ev|
 					).play;
 
 					// perc
-					(instrument: \simpsamp, buf: percs[j],
+					(instrument: \simpsamp,
+						buf: percs.wrapAt(j),
 						rate: rate,
-						amp: 0.3, pan: [-0.1, 0.1].wrapAt(j) * j,
+						amp: 0.3,
+						pan: [-0.1, 0.1].wrapAt(j) * j,
 						out: ev.bus
 					).play;
 				}
