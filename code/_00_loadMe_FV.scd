@@ -24,38 +24,40 @@ q=q?();
 // q.composPath = "compositions/*.scd".resolveRelative;
 ////// read the ones with dynamic buffer loading:
 q.codeDir = thisProcess.nowExecutingPath.dirname;
-q.futureDir = thisProcess.nowExecutingPath.dirname.dirname;
+q.futureDir = q.codeDir.dirname;
 q.composPath = "compositionsDyn/*.scd".resolveRelative;
 q.readDictPath = "libs/a_readDict.scd".resolveRelative;
 
+q.homeDir = Platform.userHomeDir;
+q.seafiledir = q.homeDir +/+ "Seafile";
 
 /////// THESE ARE THE FOLDERS for the stream installation:
 //// contributions folder in its own auto-synced seafile folder
 //// you can override these in the startup file:
 //// if these two paths already exist, they will be kept!
-q.yamlSearchPath = q.yamlSearchPath ? "~/Seafile/future_mirror/*.yaml".standardizePath;
+q.yamlSearchPath = q.yamlSearchPath ? (q.seafiledir +/+ "future_mirror/*.yaml");
 //// soundlibz folder in its own auto-synced seafile folder
-q.soundlibsPath = q.soundlibsPath ? "~/Seafile/future_soundz/soundlibs/".standardizePath;
+q.soundlibsPath = q.soundlibsPath ? (q.seafiledir +/+ "future_soundz/soundlibs/");
 //// extra files for takeovers are here:
-q.takeoverPath = q.takeoverPath ? "~/Seafile/future_takeover/".standardizePath;
+q.takeoverPath = q.takeoverPath ? (q.seafiledir +/+ "future_takeover/");
 
+// /// special path fix for Andres/windows!s
+// if ("C:/Users/CA/".pathMatch.notEmpty) {
+// 	//soundlibs path for andres ONLY:
+// 	q.yamlSearchPath = "C:/Users/CA/Seafile/future_mirror/*.yaml".standardizePath;
+// 	q.soundlibsPath = "C:/Users/CA/Seafile/future_soundz/soundlibs/";
+// 	q.takeoverPath = "C:/Users/CA/Seafile/future_takeovers/";
+// };
 
-/// special path fix for Andres/windows!s
-if ("C:/Users/CA/".pathMatch.notEmpty) {
-	//soundlibs path for andres ONLY:
-	q.yamlSearchPath = "C:/Users/CA/Seafile/future_mirror/*.yaml".standardizePath;
-	q.soundlibsPath = "C:/Users/CA/Seafile/future_soundz/soundlibs/";
-	q.takeoverPath = "C:/Users/CA/Seafile/future_takeovers/";
-};
-
-// get PostLog:
-if (\PostLog.asClass.notNil) {
-	\PostLog.asClass.start;
-} {
-	// "*** installing postlog - please recompile.".postln;
-	// Quarks.fetchDirectory;
-	// Quarks.install("postlog");
-};
+// ///// not working on windows and not essential:
+// if (\PostLog.asClass.notNil) {
+// 	\PostLog.asClass.start;
+// } {
+// 	// get PostLog if missing:
+// 	// "*** installing postlog - please recompile.".postln;
+// 	// Quarks.fetchDirectory;
+// 	// Quarks.install("postlog");
+// };
 
 // ==========================================================
 // ==========================================================
@@ -145,6 +147,7 @@ Task {
 		};
 
 		Tdef(\director_FV).play;
+
 	}
 }.play(AppClock);
 
