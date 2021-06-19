@@ -223,7 +223,7 @@ SynthDef(\sampEnv, { |out, buf, amp=0.1, rate = 1, pan, start, sustain=0.8, fade
 	var fadeTime = min(fade, BufDur.ir(buf)/3);
 	var snd = PlayBuf.ar(1,
 		buf, rate, 1,
-		start * BufSampleRate.ir(buf),
+		start * BufSampleRate.ir(buf) % BufFrames.ir(buf),
 		0, 2
 	);
 	var env = EnvGen.ar(Env.linen(fadeTime, sustain, fadeTime), doneAction: 2);

@@ -69,7 +69,11 @@ q.takeoverPath = q.takeoverPath ? (q.seafiledir +/+ "future_takeover/");
 "libs/_SampleLib.scd".loadRelative;
 "libs/_reSampleLib.scd".loadRelative;
 "libs/_SynthLib.scd".loadRelative;
-"libs/dynamic_yamling.scd".loadRelative;
+////// this is decommisioned:
+///// "libs/dynamic_yamling.scd".loadRelative;
+////// and rreplaced with this:
+"libs/dynamic_databasing.scd".loadRelative;
+"libs/dynamic_bufpool.scd".loadRelative;
 );
 
 (
