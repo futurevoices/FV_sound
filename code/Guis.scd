@@ -1,18 +1,14 @@
 /*
-Butz.clear;
+**** Requires current adclib!!!! ****
+
+Butz(\fuvo).clear;
 */
 Butz.style.font_(Butz.style.font.size_(14));
 Butz.style.winLoc = 10 @ 50;
 
-Butz.add(\mini, { Butz.showButs(2); });
-Butz.add(\maxi, { Butz.showButs });
-Butz.add(\SHOWALL, {
-	[ 'TdefAll', 'FutureVoices', 'mixer', 'MainFX', \MainVol, 'scope', 'meter' ].do { |name|
-		Butz.run(name)
-	}
-});
 
-Butz.add(\FutureVoices, { WinBounds.showOrMake(\FutureVoices) });
+Butz.addMiniMax;
+Butz.add(\StartupDial, { StartupFile.dialog });
 Butz.add(\MainVol, { WinBounds.showOrMake(\Volume) });
 Butz.add(\TdefAll, { WinBounds.showOrMake(\TdefAll) });
 Butz.add(\mixer,   { WinBounds.showOrMake(\mixer) });
@@ -20,6 +16,26 @@ Butz.add(\MainFX,  { WinBounds.showOrMake(\MainFX) });
 Butz.add(\scope,   { WinBounds.showOrMake(\scope) });
 Butz.add(\meter,   { WinBounds.showOrMake(\meter) });
 
+// specific to fuvo:
+Butz(\fuvo).addMiniMax;
+Butz(\fuvo).add(\StartupDial);
+Butz(\fuvo).add(\MainVol);
+Butz(\fuvo).add(\scope);
+Butz(\fuvo).add(\meter);
+
+Butz(\fuvo).add(\FutureVoices, { WinBounds.showOrMake(\FutureVoices) });
+
+Butz(\fuvo).add(\SHOWALL, {
+	[ 'TdefAll', 'mixer', 'MainFX', \MainVol,
+		'scope', 'meter' ].do { |name|
+		Butz.run(name)
+	};
+	Butz(\fuvo).run('FutureVoices');
+});
+
+Butz(\fuvo).add(\TdefAll);
+Butz(\fuvo).add(\mixer);
+Butz(\fuvo).add(\MainFX);
 
 WinBounds.addMake(\TdefAll, { TdefAllGui.new(16).parent.name_(\TdefAll) });
 WinBounds.addMake(\scope, { s.scope.window.name_(\scope) });
@@ -41,49 +57,30 @@ WinBounds.addMake(\MainFX, {
 			paramgui.specs.put(key, spec);
 		}
 	};
-	paramgui.specs.postln;
+	// paramgui.specs.postln;
 	q.mfgui.parent;
 });
 
 Butz.add(\closeAll, {
 	Window.closeAll;
-	Butz.actions.size;
 	defer({
-		Butz.show.updateButtons;
+		Butz.show;
 		Butz.w.layout.margins = [2, 2, 2, 2];
 		Butz.w.layout.spacing_(4);
 		Butz.showButs;
 	}, 0.1);
 });
-
-Butz.add(\openFuVoDir, { q.codeDir.openOS });
-
-Butz.add(\updateFuVo, {
-	defer { Quarks.at("futurevoices").update }
-});
-
-Butz.add(\updateQuarks, {
-	defer { Quarks.installed.do(_.update) }
-});
+Butz(\fuvo).add(\closeAll);
 
 
-Butz.add(\StartupFile, { StartupFile.dialog });
+Butz(\fuvo).add(\openDir, { q.fuvo.dir.openOS });
 
-
-Butz.add(\RESTART, {
-	fork ({
-		Window.closeAll;
-		0.2.wait;
-		s.quit;
-		0.5.wait;
-		thisProcess.recompile;
-	}, AppClock);
-});
-
+// open fuvo Butz
 Task {
 	0.1.wait;
 	Butz.run(\closeAll);
 	0.1.wait;
+	Butz.curr = \fuvo;
 	Butz.run(\meter);
 	Butz.run(\scope);
 }.play(AppClock);
@@ -151,12 +148,12 @@ WinBounds.saveString;
 WinBounds.stored.putAll( (
 	'Butz': Window.flipY(Rect(10, 10, 117.0, 460.0)),
 	'MainFX': Rect(694.0, 38.0, 524.0, 350.0),
-	'FutureVoices': Rect(403.0, 406.0, 400.0, 520),
+	'FutureVoices': Rect(450.0, 406.0, 400.0, 520),
 	'NdefMixer_mixer': Rect(150, 100, 684.0, 345.0),
 
 	'meter': Rect(10, 10, 134.0, 230.0),
 	'scope': Rect(150, 10, 263.0, 230.0),
-	'TdefAll': Rect(150, 408.0, 274.0, 354.0)
+	'TdefAll': Rect(230, 400, 300, 350)
 ) );
 
 
