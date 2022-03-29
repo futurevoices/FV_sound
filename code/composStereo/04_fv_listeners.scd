@@ -6,32 +6,32 @@ http://crca.ucsd.edu/~msp/techniques/latest/book.pdf
 */
 
 (
-MFdef('fv_listo').add(\prep, {
+MFdef('fv_listeners').add(\prep, {
 	// filter Ndef for all voices:
 	/////// was fv_catchAll
 	forkIfNeeded {
 
 		MFdef(\brazil).value;
 
-		Ndef('fv_listo').ar(numChannels: 2);
-		Ndef('fv_listo').play;
+		Ndef('fv_listeners').ar(numChannels: 2);
+		Ndef('fv_listeners').play;
 		try { s.sync };
 
-		Ndef('fv_listo')[5] = \filter -> {|in| HPF.ar(DelayN.ar(in, 0.2,  LFNoise0.ar(1/2).exprange(0.2, 1/200).lag(0.2, 0.5), 1, in), 40)  };
+		Ndef('fv_listeners')[5] = \filter -> {|in| HPF.ar(DelayN.ar(in, 0.2,  LFNoise0.ar(1/2).exprange(0.2, 1/200).lag(0.2, 0.5), 1, in), 40)  };
 
-		Ndef('fv_listo')[10] = \filter -> {|in| HPF.ar(CombL.ar(in, 0.1, LFNoise0.ar(1).exprange(1/100, 1/4000).lag(0.2, 0.5), 2, 0.2), 40)  };
+		Ndef('fv_listeners')[10] = \filter -> {|in| HPF.ar(CombL.ar(in, 0.1, LFNoise0.ar(1).exprange(1/100, 1/4000).lag(0.2, 0.5), 2, 0.2), 40)  };
 
-		Ndef('fv_listo')[20] = \filter -> {|in| HPF.ar(AdCVerb.ar(in, 4, 0.6), 40, 0.1)  };
+		Ndef('fv_listeners')[20] = \filter -> {|in| HPF.ar(AdCVerb.ar(in, 4, 0.6), 40, 0.1)  };
 
-		Ndef('fv_listo').set(\wet5, 0.75);
-		Ndef('fv_listo').set(\wet10, 0.05);
-		Ndef('fv_listo').set(\wet20, 0.075);
+		Ndef('fv_listeners').set(\wet5, 0.75);
+		Ndef('fv_listeners').set(\wet10, 0.05);
+		Ndef('fv_listeners').set(\wet20, 0.075);
 
 		try { s.sync };
 
 		Ndef(\fv_companion, {
 			var in, ampTr, ampFollower, freq, hasFreq, sound, blipFr, mod, modFormant, modBW;
-			in = Ndef('fv_listo').ar(2);
+			in = Ndef('fv_listeners').ar(2);
 			ampTr = Amplitude.kr(in.mean, 0.05, 5);
 			ampFollower = 1 - (ampTr.madd(20).clip(0, 0.95).sqrt).lag2(0.02, 6);
 			# freq, hasFreq = Pitch.kr(in.mean);
@@ -57,10 +57,10 @@ MFdef('fv_listo').add(\prep, {
 });
 
 (
-Tdef('fv_listo').quant_(0).stop.play;
-Tdef('fv_listo').set(\chosenDur, 120);
-Tdef('fv_listo' , { |ev|
-	var mykey = 'fv_listo';
+Tdef('fv_listeners').quant_(0).stop.play;
+Tdef('fv_listeners').set(\chosenDur, 120);
+Tdef('fv_listeners' , { |ev|
+	var mykey = 'fv_listeners';
 	var thisTdef = Tdef(mykey);
 	var thisNdef = q.tdefPrepNdef(thisTdef);
 	var time0 = Main.elapsedTime;
@@ -73,13 +73,13 @@ Tdef('fv_listo' , { |ev|
 	// so seed set from outside can be used when Tdef runs:
 	q.tdefSeed(thisTdef);
 
-	MFdef('fv_listo').value;
+	MFdef('fv_listeners').value;
 
 	0.1.wait;
 
 	thisNdef.send.play(fadeTime: 0.1);
 
-	Ndef('fv_listo').play;
+	Ndef('fv_listeners').play;
 	Ndef(\fv_companion).play(vol: 0.2);
 
 	inf.do {
@@ -98,7 +98,7 @@ Tdef('fv_listo' , { |ev|
 
 				// plain playback on 1 ear
 				(instrument: \simpsamp, buf: buf , amp: 0.6, pan: pans@@i,
-					out: Ndef('fv_listo').bus.index
+					out: Ndef('fv_listeners').bus.index
 				).play;
 				// F X on other channel
 				(instrument: [\singSamp, \singSampRing, \singSampComb, \singSampRinger, \singSampBlip].choose,
@@ -107,7 +107,7 @@ Tdef('fv_listo' , { |ev|
 					xpose1: [3, 3/2, 2, 5/4, 4/5, 0.75].choose,
 					rate: exprand(7/8,8/7),
 					amp: 0.2,
-					out: Ndef('fv_listo').bus.index
+					out: Ndef('fv_listeners').bus.index
 				).play;
 
 				(buf.duration).wait;

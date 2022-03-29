@@ -31,8 +31,8 @@ Tdef('fv_pyramid').addSpec(\peakTime, [0, 1]);
 Tdef('fv_pyramid').addSpec(\timeWarp, [-2, 2]); // start slow, end fast
 
 
-Tdef('fv_pyramid').set(\numEntries, 100);
-Tdef('fv_pyramid').set(\peakTime, 0.8);
+Tdef('fv_pyramid').set(\numEntries, 100); // play 100 entries
+Tdef('fv_pyramid').set(\peakTime, 0.8); // reach peak density near the end
 Tdef('fv_pyramid').set(\timeWarp, -1); // start slow, end fast
 
 Tdef( 'fv_pyramid' , { |ev|

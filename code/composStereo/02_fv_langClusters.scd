@@ -1,4 +1,4 @@
-////// this is the dynamic version of lang_clusters:
+////// this is the dynamic version of langClusters:
 /// it reads buffers newly on demand.
 
 // play clustered by language, with a BG sound.
@@ -6,7 +6,7 @@
 
 
 
-MFdef(\fv_lang_clusters).add(\preload, {
+MFdef(\fv_langClusters).add(\preload, {
 	/// make all interesting numbers parameters:
 	Ndef(\fv_forml).addSpec(\pitch, [15, 73]);
 	Ndef(\fv_forml).addSpec(\chaos, [1.0, 2.0]);
@@ -32,12 +32,12 @@ MFdef(\fv_lang_clusters).add(\preload, {
 });
 
 (
-Tdef(\fv_lang_clusters).quant_(0).stop.play;
-Tdef('fv_lang_clusters').set(\chosenDur, 120);
+Tdef(\fv_langClusters).quant_(0).stop.play;
+Tdef('fv_langClusters').set(\chosenDur, 120);
 
-Tdef(\fv_lang_clusters, { |ev|
+Tdef(\fv_langClusters, { |ev|
 
-	var mykey = 'fv_lang_clusters';
+	var mykey = 'fv_langClusters';
 	var thisTdef = Tdef(mykey);
 	var thisNdef = q.tdefPrepNdef(thisTdef);
 	var time0 = Main.elapsedTime;
@@ -48,7 +48,7 @@ Tdef(\fv_lang_clusters, { |ev|
 	// so seed set from outside can be used when Tdef runs:
 	q.tdefSeed(thisTdef);
 
-	MFdef(\fv_lang_clusters).value;
+	MFdef(\fv_langClusters).value;
 
 	0.1.wait;
 	thisNdef.play(fadeTime: 0.1);

@@ -1,11 +1,11 @@
 
 (
-Tdef('fv_kont_1').set(\chosenDur, 60);
+Tdef('fv_kontinuum').set(\chosenDur, 60);
 
-Tdef('fv_kont_1').quant_(0).stop.play;
+Tdef('fv_kontinuum').quant_(0).stop.play;
 
-Tdef('fv_kont_1', { |ev|
-	var mykey = 'fv_kont_1';
+Tdef('fv_kontinuum', { |ev|
+	var mykey = 'fv_kontinuum';
 	var thisTdef = Tdef(mykey);
 	var thisNdef = q.tdefPrepNdef(thisTdef);
 	var time0 = Main.elapsedTime;
