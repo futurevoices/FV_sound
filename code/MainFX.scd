@@ -63,6 +63,8 @@ ProxyChain.add3(
 
 ///// dual band compressor
 ///// - try whether this sounds better than ampFin limiter
+//////////// NOT WORKING YET!
+
 (
 ProxyChain.add3('dualMax', \filter -> { |in,
 	limit = 1.0, gain = 1,

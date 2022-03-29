@@ -34,7 +34,7 @@ Tdef('fv_bumpy', { |ev|
 	0.1.wait;
 	thisNdef.play(fadeTime: 0.1);
 
-	loop {
+	inf.do {
 		var mydict = q.bufmem.filterDict(q.mainDict);
 		mydict.do { |dict|
 

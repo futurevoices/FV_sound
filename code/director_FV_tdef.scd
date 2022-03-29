@@ -63,6 +63,31 @@ MFdef(\adjustTime).add(\stopOrExtend, { |compTdef, time0, plannedDur = 120, proj
 	};
 });
 
+Tdef(\hourClock, {
+	var bufs =  [q.hang, q.brazil].collect(_.choose);
+	var dur = bufs.collect(_.duration).product ** (1/bufs.size);
+	var pitches = [4, 0, 2, -5, -5, 2, 4, 0];
+	var durs = [1, 1, 1, 3, 1, 1, 1, 3] * (dur * 0.5).clip(0.38, 1.62);
+
+	"\n*** hourClock:".postln;
+	bufs.do { |buf|
+		(buf.path.basename + buf.duration.round(0.01)).postln;
+	};
+	"dur: %\n".postf(dur);
+
+	pitches.do { |pitch, i|
+		bufs.do { |buf|
+			(
+				instrument: \simpsamp,
+				buf: bufs,
+				rate: pitch.midiratio * [0.99, 1.01].scramble,
+				amp: 0.5,
+				pan: [-1, 1]
+			).play;
+		};
+		durs[i].wait;
+	};
+}).quant_(0);
 
 (
 Tdef(\director_FV).addSpec(\speedup, [1, 30, \exp]);
@@ -85,7 +110,8 @@ Tdef(\director_FV, { |ev|
 		Ndef(\zz_PASign, { SinOsc.ar }).play(12, vol: 0.1);
 	};
 
-	loop {
+	inf.do {
+		// internals
 		var cycleTimeSecs, cycleRemainSecs;
 		var remainTime, activeTdef;
 		var date, now, isClose, isAtZero;
@@ -94,6 +120,10 @@ Tdef(\director_FV, { |ev|
 		defer {
 			var t0 = Main.elapsedTime;
 			q.updateEntries;
+			/**** FOR TAKEOVERS ****/
+			// filter mainDict to focus on smaller thematic subset of mainDict
+			q.filterMain;
+			"*** q.mainDict filtered to % entries.\n".postf(q.mainDict.size);
 			q.lang.check;
 			"updated entries & langs in % secs.\n"
 			.postf((Main.elapsedTime - t0).round(0.001));
@@ -107,6 +137,12 @@ Tdef(\director_FV, { |ev|
 		thisQuarter = Date.getDate.minute div: 15;
 		[\quarter, thisQuarter, \prev, lastQuarter].postln;
 		if (thisQuarter != lastQuarter) {
+			if (thisQuarter == 0) {
+				2.wait;
+				// play a little hang/brazil bigBen flourish here?;
+				Tdef(\hourClock).embed;
+			};
+
 			"jingling!".postln;
 			Tdef(\jingleDir).embed;
 		};
@@ -117,12 +153,19 @@ Tdef(\director_FV, { |ev|
 		// new compositions get added automatically!
 		q.composChoices = q.composPath.pathMatch;
 
+		/**** FOR TAKEOVERS ****/
+		// reduce composChoices by  filtering:
+		q.filterCompos;
+
 		// // remove last played path - no immediate repeat
 		// // could keep several recent ones to avoid repeating them soon
 		// q.composChoices = q.composChoices.removeAllSuchThat { |path| path != q.chosenFile };
 
 		///// remove last 4 played paths from choices:
-		q.composChoices = q.composChoices.reject { |path| q.composRecents.includesEqual(path) };
+		q.composChoices = q.composChoices.reject { |path|
+			var numRecents = q.composChoices.size div: 2;
+			q.composRecents.keep(numRecents).includesEqual(path)
+		};
 		// choose one of them
 		q.chosenFile = q.composChoices.choose;
 
@@ -180,14 +223,14 @@ Tdef(\director_FV, { |ev|
 
 		if (isAtZero) {
 			"*** FULL HOUR ***".postln;
+			1.wait; // jump over exact full hour, so we get
 			MFdef(\dateSeed).value;
 			thisThread.randSeed_(q.seed);
 			"*** postseed check: %\n".postf(100.rand);
-			// clear chosenfile so it wont be removed from choices
-			// this is to allow syncing across machines!
-			// "play a little hang/brazil flourish here?";
 
-			q.chosenFile = "nonono";
+			// clear composRecents so we can sync across machines!
+			// also clear bufmem recents? ...
+			q.composRecents = [];
 
 			///// play jingle at full hour! plays higher up anyway:
 			// Tdef(\jingleDir).embed;

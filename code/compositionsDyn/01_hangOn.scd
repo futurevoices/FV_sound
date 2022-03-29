@@ -33,7 +33,7 @@ Tdef( 'fv_hangOn' , { |ev|
 
 	thisNdef.play(fadeTime: 0.1);
 
-	loop {
+	inf.do {
 		// could filter by mood? topic?
 		var mydict = q.mainDict;
 		// filter recents;

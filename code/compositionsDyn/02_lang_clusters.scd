@@ -69,7 +69,7 @@ Tdef(\fv_lang_clusters, { |ev|
 	q.lang.byCount;    // sorted by numEntries
 	q.lang.names;      // just names sorted by numEntries
 
-	loop {
+	inf.do {
 		var mydict = q.bufmem.filterDict(q.mainDict);
 		var langKeys = q.lang.names.scramble;
 		var dictsPerLang;

@@ -1,7 +1,9 @@
 /**** Tests for Samples:
 
 // use like this - array:
-////////// q.samba = q.loadSamples("BRAZILPERC");
+//
+
+q.samba = q.loadSamples("BRAZILPERC");
 
 
 q.samba.choose.postln.play;
@@ -25,23 +27,23 @@ q.samba.choose.postln.play;
 s.scope;
 
 
-// // as dict with full key names:
-// q.sambaDict = q.sampDict(q.samba);
-// q.sambaDict.keys.cs
-// q.sambaDict['agogo_2'].play;
-//
-// // as family dict:
-// q.sambaFamily = q.sampDictFamily(q.samba);
-// q.sambaFamily.keys;
-// q.sambaFamily[\cuica].keys;
-// q.sambaFamily[\cuica].choose.play;
-// fork { q.sambaFamily[\cuica].do { |buf| buf.play; 0.25.wait } };
-//
-// Tdef(\cuica, {
-// q.sambaFamily[\cuica].do { |buf|
-// buf.play; 0.25.wait
-// }
-// }).play;
+// as dict with full key names:
+q.sambaDict = q.sampDict(q.samba);
+q.sambaDict.keys.cs
+q.sambaDict['agogo_2'].play;
+
+// as family dict:
+q.sambaFamily = q.sampDictFamily(q.samba);
+q.sambaFamily.keys;
+q.sambaFamily[\cuica].keys;
+q.sambaFamily[\cuica].choose.play;
+fork { q.sambaFamily[\cuica].do { |buf| buf.play; 0.25.wait } };
+
+Tdef(\cuica, {
+q.sambaFamily[\cuica].do { |buf|
+buf.play; 0.25.wait
+}
+}).play;
 
 // play all sounds once
 
@@ -221,7 +223,7 @@ SynthDef(\sampEnv, { |out, buf, amp=0.1, rate = 1, pan, start, sustain=0.8, fade
 	var fadeTime = min(fade, BufDur.ir(buf)/3);
 	var snd = PlayBuf.ar(1,
 		buf, rate, 1,
-		start * BufSampleRate.ir(buf),
+		start * BufSampleRate.ir(buf) % BufFrames.ir(buf),
 		0, 2
 	);
 	var env = EnvGen.ar(Env.linen(fadeTime, sustain, fadeTime), doneAction: 2);
@@ -265,21 +267,40 @@ q.mainSampDir = (thisProcess.nowExecutingPath.dirname +/+ "Samples").pathMatch.f
 
 // single function to load folders of sounds into Buffer Arrays;
 
-/////======== 2020 better Test:
+// /////======== 2020 better Test:
+// q.findSamples = { |q, dir, mainDir|
+// 	var myDir = if(dir.contains("/") and: {mainDir.isNil} ){dir} { (mainDir ? q.mainSampDir) +/+ dir};
+// 	var myPaths = (myDir +/+ "*").standardizePath.pathMatch;
+// 	var mySFs = myPaths.collect{|p|
+// 		var sf = SoundFile.openRead(p); // test if SoundFile Class can handle it - regardless of file name ext !
+// 		if(sf.notNil){
+// 			// load'em!
+// 			var pa = sf.path;
+// 			sf.close;
+// 			pa
+// 		};
+// 	}.select( _.notNil );
+// 	mySFs
+// };
+
+// better use Soundfile.collect(path)! adc
 q.findSamples = { |q, dir, mainDir|
 	var myDir = if(dir.contains("/") and: {mainDir.isNil} ){dir} { (mainDir ? q.mainSampDir) +/+ dir};
 	var myPaths = (myDir +/+ "*").standardizePath.pathMatch;
-	var mySFs = myPaths.collect{|p|
+	var path;
+	var mySFs = myPaths.collect {|p|
 		var sf = SoundFile.openRead(p); // test if SoundFile Class can handle it - regardless of file name ext !
 		if(sf.notNil){
 			// load'em!
-			var pa = sf.path;
+			path = sf.path;
 			sf.close;
-			pa
+			path
 		};
 	}.select( _.notNil );
+	myDir.postcs;
 	mySFs
 };
+
 
 /* test
 d = q.findSamples("~/Seafile/JaMoP/upload/");

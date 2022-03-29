@@ -53,11 +53,12 @@ Tdef( 'fv_pyramid' , { |ev|
 
 
 	/////// BODY OF this composition:
-	loop {
-		var num = ev.numEntries;
-		var myChoices = q.mainDict.values.scramble.keep(ev.numEntries)
+	inf.do {
+		/////// fixed here:
+		var numEntries = ev.numEntries min: q.mainDict.size;
+		var myChoices = q.mainDict.values.scramble.keep(numEntries)
 		.sort { |a,b| a.dur > b.dur };
-		var timecurve = (0 .. num - 1).normalize ** (2 ** ev.timeWarp);
+		var timecurve = (0 .. numEntries - 1).normalize ** (2 ** ev.timeWarp);
 		var times = (timecurve * myChoices[0].dur * ev.peakTime).round(0.01);
 		var waittimes = times.differentiate;
 		var endtimes = times.collect { |time, i|
@@ -67,7 +68,12 @@ Tdef( 'fv_pyramid' , { |ev|
 		var introbuf = q.brazil.choose;
 
 		//
-		(instrument: \simpsamp, amp: 0.4, buf: introbuf, rate: [-1, 1], pan: [-1, 1].scramble).play;
+		(instrument: \simpsamp, amp: 0.4,
+			buf: introbuf,
+			rate: [-1, 1],
+			pan: [-1, 1].scramble,
+			out: ev.bus.index
+		).play;
 		introbuf.duration.wait;
 
 		// compTdef, startedTime, intendedDur, projected next dur
@@ -84,7 +90,9 @@ Tdef( 'fv_pyramid' , { |ev|
 			fork ({
 				0.5.wait;
 				(instrument: \simpsamp, buf: entry.buf,
-					amp: 0.3, pan: 1.0.rand2).play;
+					amp: 0.3, pan: 1.0.rand2,
+					out: ev.bus.index
+				).play;
 			});
 			time.wait;
 		};

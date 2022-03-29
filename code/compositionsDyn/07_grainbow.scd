@@ -25,7 +25,7 @@ Tdef('fv_grainbow', { |ev|
 	// really make sure the ndef plays ...
 	thisNdef.play(fadeTime: 0.1);
 
-	loop {
+	inf.do {
 		var dicts = q.bufmem.filterDict(q.mainDict);
 
 		dicts.values.scramble.do { |dict|

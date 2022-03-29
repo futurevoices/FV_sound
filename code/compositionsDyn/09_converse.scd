@@ -23,7 +23,7 @@ Tdef(\fv_converse).quant = 0;
 Tdef(\fv_converse).stop.play;
 
 Tdef(\fv_converse, { |ev|
-	var timeRange, allshortz, allshortz2, shortgroups, percs;
+	var allTimes, timeRange, allshortz, allshortz2, shortgroups, percs;
 	var time0 = Main.elapsedTime;
 
 	// same for all Tdefs (except name):
@@ -39,9 +39,13 @@ Tdef(\fv_converse, { |ev|
 	0.1.wait;
 	thisNdef.play(fadeTime: 0.1);
 
-	loop {
+	allTimes = q.mainDict.collectAs(_.dur, SortedList);
 
-		timeRange = (exprand(2.0, 20) * [1, 1.5]).round(0.01);
+	"dur min: % med: % max: %\n".postf(allTimes[0], allTimes[allTimes.size div: 2], allTimes.last);
+
+	inf.do {
+
+		timeRange = (exprand(1.0, 10) * allTimes.minItem * [1, 1.5]).round(0.01);
 
 		allshortz = q.mainDict.select ({ |dict|
 			dict.dur.inclusivelyBetween(*timeRange) });
@@ -58,10 +62,11 @@ Tdef(\fv_converse, { |ev|
 		);
 
 		shortgroups = allshortz.asArray.scramble.curdle(0.15);
+		shortgroups = shortgroups.select { |gr| gr.size > 0 };
 		"groupsizes: ".post;
 		shortgroups.collect(_.size).postln;
 		shortgroups.do { |myshorts, j|
-			"\n --- shortz group % - % files\n".postf(j, myshorts.size);
+			"shortz group % - % files\n".postf(j, myshorts.size);
 			// myshorts.do { |entry| entry.literal_text.keep(80).postcs };
 
 			fork {
@@ -84,24 +89,23 @@ Tdef(\fv_converse, { |ev|
 				}
 			};
 
+			myshorts.do { |dict|
+				q.readBufToDict(dict);
+				q.bufmem.addKey(dict.name);
+			};
+
+			s.sync;
+			0.5.wait;
+
 			rrand(1, 2).do { |i|
 				// reverse repeats? - not working yet
 				var rate = [1, -1][i];
 				var waittime;
 				("converse rep:" + i).postln;
 
-				myshorts.scramble.do { |dict, j|
-					var percpan;
 
-					// only load the first time, not again
-					// on reversed repeat
-					if (i == 0) {
-						q.readBufToDict(dict);
-						q.bufmem.addKey(dict.name);
-					} {
-						"reversed: ".post;
-						(dict.literal_text ?? dict.name.asString).keep(50).postcs;
-					};
+				myshorts.scramble.do { |dict, j|
+					(dict.literal_text ?? dict.name.asString).keep(60).postcs;
 
 					// compTdef, startedTime, intendedDur, projected next dur
 					MFdef(\adjustTime).value(thisTdef, time0, ev.chosenDur, dict.dur);
@@ -115,13 +119,10 @@ Tdef(\fv_converse, { |ev|
 
 					(dict.buf.duration / (q.mood.density ? 1.25)).wait;
 
-					percpan = ((j + 1) / myshorts.size) * [-1, 1].wrapAt(j);
-
 					/// whistle
-					(instrument: \glisson,
-						sustain: exprand(0.02, 0.2),
+					(instrument: \glisson, sustain: exprand(0.02, 0.2),
 						freq: exprand(400, 4000), freq2: exprand(400, 4000),
-						pan: percpan.neg,
+						pan: [-0.1, 0.1].wrapAt(j) * j,
 						rate: rate,
 						out: ev.bus
 					).play;
@@ -130,7 +131,8 @@ Tdef(\fv_converse, { |ev|
 					(instrument: \simpsamp,
 						buf: percs.wrapAt(j),
 						rate: rate,
-						amp: 0.26, pan: percpan,
+						amp: 0.3,
+						pan: [-0.1, 0.1].wrapAt(j) * j,
 						out: ev.bus
 					).play;
 				}
