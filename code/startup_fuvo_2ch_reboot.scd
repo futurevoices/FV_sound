@@ -51,12 +51,12 @@ q.fuvo.makeMainFX = false;
 
 ////// set the paths of soundfiles, database, compositions
 "*** Future Voices paths - found? ***".postln;
-// use Seafile Future_Voices dir:
-q.fuvo.dir = q.seafileDir +/+ "Future_Voices";
-// // to use the fuvo quark directory, do this:
-// q.fuvo.dir = Quarks.folder +/+ "FV_sound";
 
-q.fuvo.codeDir = q.fuvo.dir +/+ "code";
+// use the folder where this file is for codeDir:
+q.fuvo.codeDir = thisProcess.nowExecutingPath.dirname;
+// and up by one for general fuvo dir:
+q.fuvo.dir = q.fuvo.codeDir.dirname;
+
 q.fuvo.loadMePath = q.fuvo.codeDir +/+ "_00_loadMe_FV.scd";
 
 // // uncomment the compositions folder to load:
