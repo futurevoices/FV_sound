@@ -12,24 +12,31 @@
 - each single composition is loaded by loading one code file from subdir compositionsDyn;
 - it is ended/cleaned up by the Tdef(\stopAll)
 - all compositions have Tdef, Ndef, Pdef names starting with 'fv' !
-- loading compos file returns a Tdef(<compname> which runs everything else.
-- file autostarts tdef with some delay.
+- loading compos file returns a Tdef(<compname>) which runs everything else.
+- file autostarts the tdef with a little delay.
 
 ****/
 
-// set relative filepaths once at compile time
-q=q?();
+// global container for everything
+q = q ? ();
 
-////// orig: preloaded buffers
-// q.composPath = "compositions/*.scd".resolveRelative;
-////// read the ones with dynamic buffer loading:
-q.codeDir = thisProcess.nowExecutingPath.dirname;
-q.futureDir = q.codeDir.dirname;
-q.composPath = "compositionsDyn/*.scd".resolveRelative;
-q.readDictPath = "libs/a_readDict.scd".resolveRelative;
-
+// user home directory
 q.homeDir = Platform.userHomeDir;
-q.seafiledir = q.homeDir +/+ "Seafile";
+// Where is the local Seafile dir for the default soundfile/database locations?
+q.seafiledir = q.seafiledir ? (q.homeDir +/+ "Seafile");
+
+// Do we have any GUI classes present?
+// useful for avoiding to load gui code when on a headless platform
+// (webserver, raspi lite ...),
+q.hasGui = \View.asClass.notNil;
+
+// set relative filepaths once at compile time
+
+q.fuvo.codeDir = thisProcess.nowExecutingPath.dirname;
+q.fuvo.futureDir = q.fuvo.codeDir.dirname;
+
+
+
 
 /////// THESE ARE THE FOLDERS for the stream installation:
 //// contributions folder in its own auto-synced seafile folder
@@ -41,28 +48,10 @@ q.soundlibsPath = q.soundlibsPath ? (q.seafiledir +/+ "future_soundz/soundlibs/"
 //// extra files for takeovers are here:
 q.takeoverPath = q.takeoverPath ? (q.seafiledir +/+ "future_takeover/");
 
-// /// special path fix for Andres/windows!s
-// if ("C:/Users/CA/".pathMatch.notEmpty) {
-// 	//soundlibs path for andres ONLY:
-// 	q.yamlSearchPath = "C:/Users/CA/Seafile/future_mirror/*.yaml".standardizePath;
-// 	q.soundlibsPath = "C:/Users/CA/Seafile/future_soundz/soundlibs/";
-// 	q.takeoverPath = "C:/Users/CA/Seafile/future_takeovers/";
-// };
-
-// ///// not working on windows and not essential:
-// if (\PostLog.asClass.notNil) {
-// 	\PostLog.asClass.start;
-// } {
-// 	// get PostLog if missing:
-// 	// "*** installing postlog - please recompile.".postln;
-// 	// Quarks.fetchDirectory;
-// 	// Quarks.install("postlog");
-// };
 
 // ==========================================================
 // ==========================================================
 // first, load SynthDef and sample loading libraries
-
 
 (
 "libs/a_functions.scd".loadRelative; // load all functions
@@ -71,7 +60,7 @@ q.takeoverPath = q.takeoverPath ? (q.seafiledir +/+ "future_takeover/");
 "libs/_SynthLib.scd".loadRelative;
 ////// this is decommisioned:
 ///// "libs/dynamic_yamling.scd".loadRelative;
-////// and rreplaced with this:
+////// and replaced with this:
 "libs/dynamic_databasing.scd".loadRelative;
 "libs/dynamic_bufpool.scd".loadRelative;
 );
@@ -104,14 +93,18 @@ Task {
 	// give server lots of realtime Memory: 2 ** 21 is 2 GB, 2 ** 19 is 500MB
 	s.options.memSize = (2 ** 19).asInteger; // 500MB
 	s.options.numAudioBusChannels = 4096;
-	// priority: stability of stream more important thatn low latency
+	// priority: stability of stream more important than low latency
 	s.options.hardwareBufferSize = 4096;
 	s.options.sampleRate = 44100;
 	s.options.numBuffers = 2048; // default is 1024
 
 	// no inputs
 	s.options.numInputBusChannels = 0;
-	s.options.numOutputBusChannels = 4;
+	s.options.numOutputBusChannels = 2;
+
+	// s.options.numOutputBusChannels = 10;
+	// s.options.device = "Soundcraft Ui24";
+	//     ServerOptions.devices
 
 	q.usePlayAudio12 = ServerOptions.devices.any (_=="PlayAUDIO12");
 
@@ -133,7 +126,7 @@ Task {
 
 		// remove for headless deploy
 		if (\View.asClass.notNil) {
-			defer ({ (q.codeDir +/+ "Guis.scd").load }, 0.2);
+			defer ({ (q.fuvo.codeDir +/+ "Guis.scd").load }, 0.2);
 		};
 
 		////// preload 3 sample banks

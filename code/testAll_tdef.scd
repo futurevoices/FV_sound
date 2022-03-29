@@ -12,7 +12,7 @@ Tdef(\testAll, { |ev|
 	Tdef(\stopAll).stop.play;
 	Tdef(\jingleDir).embed;
 
-	q.composChoices = q.composPath.pathMatch;
+	q.composChoices = q.fuvo.composPath.pathMatch;
 
 	q.composChoices.do { |compos|
 		var activeTdef;
@@ -28,6 +28,7 @@ Tdef(\testAll, { |ev|
 
 		activeTdef = q.chosenFile.load; // load and play!
 		activeTdef.postln.set(\randSeed, 10000.rand);
+		q.activeTdef = activeTdef;
 
 		Tdef(\testAll).addSpec(\remainTime, [ev.episodeTime, 0, \lin, 0.01]);
 		ev.remainTime = ev.episodeTime;
