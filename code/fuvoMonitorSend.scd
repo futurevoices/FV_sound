@@ -12,18 +12,17 @@ MFdef(\senderFunc).enable(\plot);
 */
 
 SENDER SIDE:
---> to run at DLF house and on gencomp stream source:
+--> to run on computer in radio DLF house, and on gencomp stream generator (at adc):
 - watch that we have sound output
-- send last n vol values to OSCRouter
+- send last n volume values to OSCRouter
 - optionally plot locally for visual monitoring
-- if vol too low too long, try restarting
+- if vol too low for too long, try restarting
 
 // TODO:
 // lazarus shell scripts, esp. Paris - in SC
 if sound output is silent, try restarting FV_director
 if server dead, try rebooting it
 in shell: if pgrep sclang is nil, kill SuperCollider and restart it
-
 
 RECEIVER:
 --> whoever is on duty to watch that the streams are running

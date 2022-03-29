@@ -29,15 +29,15 @@ q.fuvo.oscar.join;
 
 q.fuvo.oscar.peers.postln;
 
-q.fuvo.win = Window("fuvo_remotes").front;
-q.fuvo.win.addFlowLayout;
-q.fuvo.plot1Name = StaticText(q.fuvo.win, 400@20).string_("gencomp");
-q.fuvo.plot1 = Plotter("gencomp", (400@180).asRect, q.fuvo.win);
-q.fuvo.plot1.value_((0.0, 0.1 ..1.0));
+// q.fuvo.win = Window("fuvo_remotes").front;
+// q.fuvo.win;
 
 /*
 OSCdef(\fuvoMonitor).disable;
 q.fuvo.senders.choose.recvAmps.fill(0);
+
+q.fuvo.addPlotta('gc_09_lap_waisvisz');
+q.fuvo.addPlotta('gc_09_lap_waisvisz');
 */
 
 OSCdef(\fuvoMonitor, { |msg|
@@ -67,6 +67,7 @@ OSCdef(\fuvoMonitor).disable;
 OSCdef(\fuvoMonitor).enable;
 
 q.fuvo.keys
+q.fuvo.senders
 */
 
 // optional : plotting
