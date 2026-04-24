@@ -39,7 +39,10 @@ Butz(\fuvo).add(\MainFX);
 
 WinBounds.addMake(\TdefAll, { TdefAllGui.new(16).parent.name_(\TdefAll) });
 WinBounds.addMake(\scope, { s.scope.window.name_(\scope) });
-WinBounds.addMake(\meter, { s.meter.window.name_(\meter) });
+WinBounds.addMake(\meter, {
+	s.meter;
+	Window.find(s.name).name_(\meter)
+});
 
 WinBounds.addMake(\Volume, {
 	VolumeGui(s.volume, nil, Rect(150.0, 600.0, 80.0, 330.0)).window;
